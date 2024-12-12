@@ -58,14 +58,14 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDOm5GG4szAohychyh08gdxlHPX-QYnAcI',
-    appId: '1:1074134422433:ios:755f2f8bd79d34f79ef1e0',
+    apiKey: 'AIzaSyBerDT9HGBXu88DaG3s0E3LtVGwAsjC0JU',
+    appId: '1:1074134422433:ios:3a9c8b99ff7f04159ef1e0',
     messagingSenderId: '1074134422433',
     projectId: 'delivery-20857',
     storageBucket: 'delivery-20857.appspot.com',
     androidClientId: '1074134422433-0ghki6lc5ehg5etc9vbvp3pcjoimo7at.apps.googleusercontent.com',
-    iosClientId: '1074134422433-j6fbjoc86r5h9j1ks0gjkt7b0e5v4r6s.apps.googleusercontent.com',
-    iosBundleId: 'com.mighty.taxirider2',
+    iosClientId: '1074134422433-mmrtbkcnpvhi21ldpv2dmjbjma1ub8uv.apps.googleusercontent.com',
+    iosBundleId: 'com.mightytaxirider.app',
   );
 
 }
