@@ -130,6 +130,7 @@ dev_dependencies:
   #flutter packages pub run build_runner build --delete-conflicting-outputs
 
 dependency_overrides:
+  google_api_headers: ^4.2.6
   package_info_plus: ^4.1.0
   intl: ^0.18.0
   http: ^0.13.5
