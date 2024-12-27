@@ -134,6 +134,8 @@ dev_dependencies:
 
 dependency_overrides:
   package_info_plus: ^4.1.0
+  flutter_inappwebview: ^6.1.5
+
   intl: ^0.18.0
   http: ^0.13.5
   firebase_auth: ^5.3.4
