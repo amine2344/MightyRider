@@ -31,7 +31,8 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
   pod 'GTMSessionFetcher/Core', '>= 3.4.0'
-  pod 'OneSignalXCFramework', '5.2.9' 
+  
+  
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
