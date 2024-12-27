@@ -31,7 +31,6 @@ import 'NotificationScreen.dart';
 import '../components/SearchLocationComponent.dart';
 
 class DashBoardScreen extends StatefulWidget {
-
   @override
   DashBoardScreenState createState() => DashBoardScreenState();
   String? cancelReason;
@@ -70,11 +69,11 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   void initState() {
     super.initState();
     locationPermission();
-    if(widget.cancelReason!=null){
+    if (widget.cancelReason != null) {
       afterBuildCreated(() {
         _triggerCanceledPopup();
       });
-    }else{
+    } else {
       getCurrentRequest();
     }
     afterBuildCreated(() {
@@ -85,8 +84,10 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   void init() async {
     getCurrentUserLocation();
 
-    riderIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), SourceIcon);
-    driverIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), MultipleDriver);
+    riderIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), SourceIcon);
+    driverIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), MultipleDriver);
     await getAppSettingsData();
 
     polylinePoints = PolylinePoints();
@@ -94,27 +95,35 @@ class DashBoardScreenState extends State<DashBoardScreen> {
 
   Future<void> getCurrentUserLocation() async {
     if (permissionData != LocationPermission.denied) {
-      if(sourceLocation!=null){
-        polylineSource = LatLng(sourceLocation!.latitude, sourceLocation!.longitude);
+      if (sourceLocation != null) {
+        polylineSource =
+            LatLng(sourceLocation!.latitude, sourceLocation!.longitude);
         addMarker();
         startLocationTracking();
         await getNearByDriver();
         return;
       }
-      final geoPosition = await Geolocator.getCurrentPosition(timeLimit: Duration(seconds: 30), desiredAccuracy: LocationAccuracy.high).catchError((error) {
-        launchScreen(navigatorKey.currentState!.overlay!.context, LocationPermissionScreen());
+      final geoPosition = await Geolocator.getCurrentPosition(
+              timeLimit: Duration(seconds: 30),
+              desiredAccuracy: LocationAccuracy.high)
+          .catchError((error) {
+        launchScreen(navigatorKey.currentState!.overlay!.context,
+            LocationPermissionScreen());
         // Navigator.push(context, MaterialPageRoute(builder: (_) => LocationPermissionScreen()));
       });
       sourceLocation = LatLng(geoPosition.latitude, geoPosition.longitude);
-      List<Placemark>? placemarks = await placemarkFromCoordinates(geoPosition.latitude, geoPosition.longitude);
+      List<Placemark>? placemarks = await placemarkFromCoordinates(
+          geoPosition.latitude, geoPosition.longitude);
       await getNearByDriver();
 
       //set Country
-      sharedPref.setString(COUNTRY, placemarks[0].isoCountryCode.validate(value: defaultCountry));
+      sharedPref.setString(COUNTRY,
+          placemarks[0].isoCountryCode.validate(value: defaultCountry));
 
       Placemark place = placemarks[0];
       if (place != null) {
-        sourceLocationTitle = "${place.name != null ? place.name : place.subThoroughfare}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}, ${place.country}";
+        sourceLocationTitle =
+            "${place.name != null ? place.name : place.subThoroughfare}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}, ${place.country}";
         polylineSource = LatLng(geoPosition.latitude, geoPosition.longitude);
       }
       addMarker();
@@ -122,7 +131,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
 
       setState(() {});
     } else {
-      launchScreen(navigatorKey.currentState!.overlay!.context, LocationPermissionScreen());
+      launchScreen(navigatorKey.currentState!.overlay!.context,
+          LocationPermissionScreen());
       // Navigator.push(context, MaterialPageRoute(builder: (_) => LocationPermissionScreen()));
     }
   }
@@ -132,7 +142,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
       servicesListData = value.rideRequest ?? value.onRideRequest;
       // servicesListData = value.onRideRequest;
       print("Line124");
-      if(servicesListData==null){
+      if (servicesListData == null) {
         sharedPref.remove(REMAINING_TIME);
         sharedPref.remove(IS_TIME);
       }
@@ -140,13 +150,18 @@ class DashBoardScreenState extends State<DashBoardScreen> {
       // print("Line126:::${value.onRideRequest.}");
       if (servicesListData != null) {
         print("Line126");
-        if (servicesListData!.status != COMPLETED  && servicesListData!.status != CANCELED) {
+        if (servicesListData!.status != COMPLETED &&
+            servicesListData!.status != CANCELED) {
           print("Line128");
           launchScreen(
             getContext,
             NewEstimateRideListWidget(
-              sourceLatLog: LatLng(double.parse(servicesListData!.startLatitude!), double.parse(servicesListData!.startLongitude!)),
-              destinationLatLog: LatLng(double.parse(servicesListData!.endLatitude!), double.parse(servicesListData!.endLongitude!)),
+              sourceLatLog: LatLng(
+                  double.parse(servicesListData!.startLatitude!),
+                  double.parse(servicesListData!.startLongitude!)),
+              destinationLatLog: LatLng(
+                  double.parse(servicesListData!.endLatitude!),
+                  double.parse(servicesListData!.endLongitude!)),
               sourceTitle: servicesListData!.startAddress!,
               destinationTitle: servicesListData!.endAddress!,
               isCurrentRequest: true,
@@ -155,14 +170,27 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             ),
             pageRouteAnimation: PageRouteAnimation.SlideBottomTop,
           );
-        } else if (servicesListData!.status == COMPLETED && servicesListData!.isRiderRated == 0) {
-          Future.delayed(Duration(seconds: 1),() {
-            launchScreen(getContext, ReviewScreen(rideRequest: servicesListData!, driverData: value.driver), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
-          },);
+        } else if (servicesListData!.status == COMPLETED &&
+            servicesListData!.isRiderRated == 0) {
+          Future.delayed(
+            Duration(seconds: 1),
+            () {
+              launchScreen(
+                  getContext,
+                  ReviewScreen(
+                      rideRequest: servicesListData!, driverData: value.driver),
+                  pageRouteAnimation: PageRouteAnimation.SlideBottomTop,
+                  isNewTask: true);
+            },
+          );
         }
-      } else if (value.payment != null && value.payment!.paymentStatus != "paid") {
+      } else if (value.payment != null &&
+          value.payment!.paymentStatus != "paid") {
         print("Line151");
-        launchScreen(getContext, RidePaymentDetailScreen(rideId: value.payment!.rideRequestId), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
+        launchScreen(getContext,
+            RidePaymentDetailScreen(rideId: value.payment!.rideRequestId),
+            pageRouteAnimation: PageRouteAnimation.SlideBottomTop,
+            isNewTask: true);
         // Future.delayed(Duration(seconds: 1),() {
         //
         // },);
@@ -176,9 +204,11 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   Future<void> locationPermission() async {
-    serviceStatusStream = Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    serviceStatusStream =
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       if (status == ServiceStatus.disabled) {
-        launchScreen(navigatorKey.currentState!.overlay!.context, LocationPermissionScreen());
+        launchScreen(navigatorKey.currentState!.overlay!.context,
+            LocationPermissionScreen());
       } else if (status == ServiceStatus.enabled) {
         getCurrentUserLocation();
         if (locationScreenKey.currentContext != null) {
@@ -220,8 +250,10 @@ class DashBoardScreenState extends State<DashBoardScreen> {
         markers.add(
           Marker(
             markerId: MarkerId('Driver${element.id}'),
-            position: LatLng(double.parse(element.latitude!.toString()), double.parse(element.longitude!.toString())),
-            infoWindow: InfoWindow(title: '${element.firstName} ${element.lastName}', snippet: ''),
+            position: LatLng(double.parse(element.latitude!.toString()),
+                double.parse(element.longitude!.toString())),
+            infoWindow: InfoWindow(
+                title: '${element.firstName} ${element.lastName}', snippet: ''),
             icon: driverIcon,
           ),
         );
@@ -248,8 +280,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
         systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.light,
             statusBarColor: Colors.black38,
-            statusBarBrightness: Brightness.dark
-        ),
+            statusBarBrightness: Brightness.dark),
         toolbarHeight: 0,
         // leading: BackButton(color: context.iconColor),
         // title: Text(language.signUp, style: boldTextStyle()),
@@ -259,9 +290,10 @@ class DashBoardScreenState extends State<DashBoardScreen> {
       drawer: DrawerComponent(),
       body: Stack(
         children: [
-          if (sharedPref.getDouble(LATITUDE) != null && sharedPref.getDouble(LONGITUDE) != null)
+          if (sharedPref.getDouble(LATITUDE) != null &&
+              sharedPref.getDouble(LONGITUDE) != null)
             GoogleMap(
-              padding:EdgeInsets.only(top:context.statusBarHeight + 4+24),
+              padding: EdgeInsets.only(top: context.statusBarHeight + 4 + 24),
               compassEnabled: true,
               mapToolbarEnabled: false,
               zoomControlsEnabled: false,
@@ -271,7 +303,9 @@ class DashBoardScreenState extends State<DashBoardScreen> {
               markers: markers.map((e) => e).toSet(),
               polylines: _polyLines,
               initialCameraPosition: CameraPosition(
-                target: sourceLocation ?? LatLng(sharedPref.getDouble(LATITUDE)!, sharedPref.getDouble(LONGITUDE)!),
+                target: sourceLocation ??
+                    LatLng(sharedPref.getDouble(LATITUDE)!,
+                        sharedPref.getDouble(LONGITUDE)!),
                 zoom: cameraZoom,
                 tilt: cameraTilt,
                 bearing: cameraBearing,
@@ -285,7 +319,9 @@ class DashBoardScreenState extends State<DashBoardScreen> {
           ),
           SlidingUpPanel(
             padding: EdgeInsets.all(16),
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), topRight: Radius.circular(defaultRadius)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(defaultRadius),
+                topRight: Radius.circular(defaultRadius)),
             backdropTapClosesPanel: true,
             minHeight: 140,
             maxHeight: 140,
@@ -298,10 +334,13 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                     margin: EdgeInsets.only(bottom: 12),
                     height: 5,
                     width: 70,
-                    decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(defaultRadius)),
+                    decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(defaultRadius)),
                   ),
                 ),
-                Text(language.whatWouldYouLikeToGo.capitalizeFirstLetter(), style: primaryTextStyle()),
+                Text(language.whatWouldYouLikeToGo.capitalizeFirstLetter(),
+                    style: primaryTextStyle()),
                 SizedBox(height: 12),
                 AppTextField(
                   autoFocus: false,
@@ -310,11 +349,14 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                     showModalBottomSheet(
                       isScrollControlled: true,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), topRight: Radius.circular(defaultRadius)),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(defaultRadius),
+                            topRight: Radius.circular(defaultRadius)),
                       ),
                       context: context,
                       builder: (_) {
-                        return SearchLocationComponent(title: sourceLocationTitle);
+                        return SearchLocationComponent(
+                            title: sourceLocationTitle);
                       },
                     );
                   },
@@ -325,11 +367,21 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                     prefixIcon: Icon(Feather.search),
                     filled: false,
                     isDense: true,
-                    focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(defaultRadius), borderSide: BorderSide(color: dividerColor)),
-                    disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(defaultRadius), borderSide: BorderSide(color: dividerColor)),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(defaultRadius), borderSide: BorderSide(color: Colors.black)),
-                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(defaultRadius), borderSide: BorderSide(color: dividerColor)),
-                    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(defaultRadius), borderSide: BorderSide(color: Colors.red)),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(defaultRadius),
+                        borderSide: BorderSide(color: dividerColor)),
+                    disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(defaultRadius),
+                        borderSide: BorderSide(color: dividerColor)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(defaultRadius),
+                        borderSide: BorderSide(color: Colors.black)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(defaultRadius),
+                        borderSide: BorderSide(color: dividerColor)),
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(defaultRadius),
+                        borderSide: BorderSide(color: Colors.red)),
                     alignLabelWithHint: true,
                     hintText: language.enterYourDestination,
                   ),
@@ -360,7 +412,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.2), spreadRadius: 1),
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.2), spreadRadius: 1),
               ],
               borderRadius: BorderRadius.circular(defaultRadius),
             ),
@@ -369,14 +422,16 @@ class DashBoardScreenState extends State<DashBoardScreen> {
         ),
         inkWellWidget(
           onTap: () {
-            launchScreen(context, NotificationScreen(), pageRouteAnimation: PageRouteAnimation.Slide);
+            launchScreen(context, NotificationScreen(),
+                pageRouteAnimation: PageRouteAnimation.Slide);
           },
           child: Container(
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.2), spreadRadius: 1),
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.2), spreadRadius: 1),
               ],
               borderRadius: BorderRadius.circular(defaultRadius),
             ),
@@ -388,32 +443,47 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void _triggerCanceledPopup() {
-    showDialog(context: context,barrierDismissible: false, builder: (context) {
-      return AlertDialog(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: Text("${language.rideCanceledByDriver}",maxLines: 2,style: boldTextStyle(),)),
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.clear),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("${language.cancelledReason}",style: secondaryTextStyle(),),
-            Text(widget.cancelReason.validate(),style: primaryTextStyle(),),
-          ],
-        ),
-      );
-    },);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Text(
+                "${language.rideCanceledByDriver}",
+                maxLines: 2,
+                style: boldTextStyle(),
+              )),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.clear),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "${language.cancelledReason}",
+                style: secondaryTextStyle(),
+              ),
+              Text(
+                widget.cancelReason.validate(),
+                style: primaryTextStyle(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

@@ -98,7 +98,7 @@ class SignInScreenState extends State<SignInScreen> {
             appStore.setLoading(false);
             launchScreen(context, DashBoardScreen(),
                 isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
-          }).catchError((e) {
+          }).catchError((e) async {
             appStore.setLoading(false);
             if (e.toString().contains('user-not-found')) {
               authService.signUpWithEmailPassword(
@@ -112,7 +112,7 @@ class SignInScreenState extends State<SignInScreen> {
                 userType: RIDER,
               );
             } else {
-              launchScreen(context, DashBoardScreen(),
+              await launchScreen(context, DashBoardScreen(),
                   isNewTask: true,
                   pageRouteAnimation: PageRouteAnimation.Slide);
             }

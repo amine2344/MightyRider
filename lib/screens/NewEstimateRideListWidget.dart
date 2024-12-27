@@ -46,13 +46,21 @@ class NewEstimateRideListWidget extends StatefulWidget {
   final int? id;
 
   NewEstimateRideListWidget(
-      {required this.sourceLatLog, required this.destinationLatLog, required this.sourceTitle, required this.destinationTitle, this.isCurrentRequest = false, this.servicesId, this.id});
+      {required this.sourceLatLog,
+      required this.destinationLatLog,
+      required this.sourceTitle,
+      required this.destinationTitle,
+      this.isCurrentRequest = false,
+      this.servicesId,
+      this.id});
 
   @override
-  NewEstimateRideListWidgetState createState() => NewEstimateRideListWidgetState();
+  NewEstimateRideListWidgetState createState() =>
+      NewEstimateRideListWidgetState();
 }
 
-class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> with WidgetsBindingObserver{
+class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget>
+    with WidgetsBindingObserver {
   late Stream stream;
 
   RideService rideService = RideService();
@@ -84,7 +92,7 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
   num mTotalAmount = 0;
 
   double? durationOfDrop = 0.0;
-  bool rideCancelDetected=false;
+  bool rideCancelDetected = false;
 
   double? distance = 0;
   double locationDistance = 0.0;
@@ -102,7 +110,7 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
   OnRideRequest? rideRequestData;
   Driver? driverData;
   Timer? timer;
-  var key=GlobalKey<ScaffoldState>();
+  var key = GlobalKey<ScaffoldState>();
   late BitmapDescriptor sourceIcon;
   late BitmapDescriptor destinationIcon;
   late BitmapDescriptor driverIcon;
@@ -117,19 +125,23 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async{
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
-    if(key.currentContext!=null){
+    if (key.currentContext != null) {
       if (state == AppLifecycleState.resumed) {
         final GoogleMapController controller = await _controller.future;
         onMapCreated(controller);
       }
     }
   }
+
   void init() async {
-    sourceIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), SourceIcon);
-    destinationIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), DestinationIcon);
-    driverIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), DriverIcon);
+    sourceIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), SourceIcon);
+    destinationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), DestinationIcon);
+    driverIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), DriverIcon);
     getServiceList();
     getCurrentRequest();
     // mqttForUser();
@@ -139,7 +151,6 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
   }
 
   getCurrentRequest() async {
-
     await getCurrentRideRequest().then((value) {
       rideRequestData = value.rideRequest ?? value.onRideRequest;
       // if (value.rideRequest != null || value.onRideRequest != null) {
@@ -163,14 +174,21 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
           // }
         }
         setState(() {});
-        if (rideRequestData!.status == COMPLETED && rideRequestData != null && driverData != null) {
-          if(timer!=null){
+        if (rideRequestData!.status == COMPLETED &&
+            rideRequestData != null &&
+            driverData != null) {
+          if (timer != null) {
             timer!.cancel();
           }
           timer = null;
-          if(currentScreen!=false) {
+          if (currentScreen != false) {
             currentScreen = false;
-            launchScreen(context, ReviewScreen(rideRequest: rideRequestData!, driverData: driverData), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
+            launchScreen(
+                context,
+                ReviewScreen(
+                    rideRequest: rideRequestData!, driverData: driverData),
+                pageRouteAnimation: PageRouteAnimation.SlideBottomTop,
+                isNewTask: true);
           }
           // if(appStore.isRiderForAnother == "1" || rideRequestData!.isRiderRated==1){
           //   launchScreen(context, DashBoardScreen(), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
@@ -178,12 +196,20 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
           //   launchScreen(context, ReviewScreen(rideRequest: rideRequestData!, driverData: driverData), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
           // }
         }
-      } else if (appStore.isRiderForAnother == "1" && value.payment!=null && value.payment!.paymentStatus == SUCCESS) {
-        if(currentScreen!=false) {
+      } else if (appStore.isRiderForAnother == "1" &&
+          value.payment != null &&
+          value.payment!.paymentStatus == SUCCESS) {
+        if (currentScreen != false) {
           currentScreen = false;
-          Future.delayed(Duration(seconds: 1),() {
-            launchScreen(context, RidePaymentDetailScreen(rideId: value.payment!.rideRequestId), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
-          },);
+          Future.delayed(
+            Duration(seconds: 1),
+            () {
+              launchScreen(context,
+                  RidePaymentDetailScreen(rideId: value.payment!.rideRequestId),
+                  pageRouteAnimation: PageRouteAnimation.SlideBottomTop,
+                  isNewTask: true);
+            },
+          );
           // launchScreen(context, ReviewScreen(rideRequest: rideRequestData!, driverData: driverData), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
         }
       }
@@ -192,9 +218,11 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
       //     launchScreen(context, RidePaymentDetailScreen(rideId: value.payment!.rideRequestId), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
       //   },);
       // }
-    }).catchError((error,stack) {
+    }).catchError((error, stack) {
       // throw error;
-      FirebaseCrashlytics.instance.recordError("review_navigate_issue::"+error.toString(), stack, fatal: true);
+      FirebaseCrashlytics.instance.recordError(
+          "review_navigate_issue::" + error.toString(), stack,
+          fatal: true);
       // exportedLogTest(logMessage: "logMessage:::${error} STACK:::${stack} ::::", file_name: "review_navigate_issue");
       log("Error-- " + error.toString());
       throw error;
@@ -205,15 +233,18 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
     markers.clear();
     polylinePoints = PolylinePoints();
     setPolyLines(
-      sourceLocation: LatLng(widget.sourceLatLog.latitude, widget.sourceLatLog.longitude),
-      destinationLocation: LatLng(widget.destinationLatLog.latitude, widget.destinationLatLog.longitude),
+      sourceLocation:
+          LatLng(widget.sourceLatLog.latitude, widget.sourceLatLog.longitude),
+      destinationLocation: LatLng(widget.destinationLatLog.latitude,
+          widget.destinationLatLog.longitude),
       driverLocation: driverLatitudeLocation,
     );
     MarkerId id = MarkerId('Source');
     markers.add(
       Marker(
         markerId: id,
-        position: LatLng(widget.sourceLatLog.latitude, widget.sourceLatLog.longitude),
+        position:
+            LatLng(widget.sourceLatLog.latitude, widget.sourceLatLog.longitude),
         infoWindow: InfoWindow(title: widget.sourceTitle),
         icon: sourceIcon,
       ),
@@ -223,7 +254,10 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
 
     MarkerId id3 = MarkerId('Destination');
     markers.remove(id3);
-    rideRequestData != null && (rideRequestData!.status == ACCEPTED || rideRequestData!.status == ARRIVING || rideRequestData!.status == ARRIVED)
+    rideRequestData != null &&
+            (rideRequestData!.status == ACCEPTED ||
+                rideRequestData!.status == ARRIVING ||
+                rideRequestData!.status == ARRIVED)
         ? markers.add(
             Marker(
               markerId: id2,
@@ -234,7 +268,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
         : markers.add(
             Marker(
               markerId: id3,
-              position: LatLng(widget.destinationLatLog.latitude, widget.destinationLatLog.longitude),
+              position: LatLng(widget.destinationLatLog.latitude,
+                  widget.destinationLatLog.longitude),
               infoWindow: InfoWindow(title: widget.destinationTitle),
               icon: destinationIcon,
             ),
@@ -263,24 +298,31 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
           locationDistance = serviceList[0].dropoffDistanceInKm!.toDouble();
           distanceUnit = DISTANCE_TYPE_KM;
         } else {
-          locationDistance = serviceList[0].dropoffDistanceInKm!.toDouble() * 0.621371;
+          locationDistance =
+              serviceList[0].dropoffDistanceInKm!.toDouble() * 0.621371;
           distanceUnit = DISTANCE_TYPE_MILE;
         }
         durationOfDrop = serviceList[0].duration!.toDouble();
       }
 
       if (serviceList.isNotEmpty) servicesListData = serviceList[0];
-      if (serviceList.isNotEmpty) paymentMethodType = serviceList[0].paymentMethod!;
-      if (serviceList.isNotEmpty) cashList = paymentMethodType == CASH_WALLET ? cashList = [CASH, WALLET] : cashList = [paymentMethodType];
+      if (serviceList.isNotEmpty)
+        paymentMethodType = serviceList[0].paymentMethod!;
+      if (serviceList.isNotEmpty)
+        cashList = paymentMethodType == CASH_WALLET
+            ? cashList = [CASH, WALLET]
+            : cashList = [paymentMethodType];
       if (serviceList.isNotEmpty) {
         if (serviceList[0].discountAmount != 0) {
-          mSelectServiceAmount = serviceList[0].subtotal!.toStringAsFixed(fixedDecimal);
+          mSelectServiceAmount =
+              serviceList[0].subtotal!.toStringAsFixed(fixedDecimal);
         } else {
-          mSelectServiceAmount = serviceList[0].totalAmount!.toStringAsFixed(fixedDecimal);
+          mSelectServiceAmount =
+              serviceList[0].totalAmount!.toStringAsFixed(fixedDecimal);
         }
       }
-      if(oldPaymentType!=null){
-        paymentMethodType=oldPaymentType??'';
+      if (oldPaymentType != null) {
+        paymentMethodType = oldPaymentType ?? '';
       }
       setState(() {});
     }).catchError((error) {
@@ -304,24 +346,35 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
       value.data!.sort((a, b) => a.totalAmount!.compareTo(b.totalAmount!));
       serviceList.addAll(value.data!);
       if (serviceList.isNotEmpty) {
-        locationDistance = serviceList[selectedIndex].dropoffDistanceInKm!.toDouble();
+        locationDistance =
+            serviceList[selectedIndex].dropoffDistanceInKm!.toDouble();
 
         if (serviceList[selectedIndex].distanceUnit == DISTANCE_TYPE_KM) {
-          locationDistance = serviceList[selectedIndex].dropoffDistanceInKm!.toDouble();
+          locationDistance =
+              serviceList[selectedIndex].dropoffDistanceInKm!.toDouble();
           distanceUnit = DISTANCE_TYPE_KM;
         } else {
-          locationDistance = serviceList[selectedIndex].dropoffDistanceInKm!.toDouble() * 0.621371;
+          locationDistance =
+              serviceList[selectedIndex].dropoffDistanceInKm!.toDouble() *
+                  0.621371;
           distanceUnit = DISTANCE_TYPE_MILE;
         }
         durationOfDrop = serviceList[selectedIndex].duration!.toDouble();
       }
       if (serviceList.isNotEmpty) servicesListData = serviceList[selectedIndex];
-      if (serviceList.isNotEmpty) cashList = paymentMethodType == CASH_WALLET ? cashList = [CASH, WALLET] : cashList = [paymentMethodType];
+      if (serviceList.isNotEmpty)
+        cashList = paymentMethodType == CASH_WALLET
+            ? cashList = [CASH, WALLET]
+            : cashList = [paymentMethodType];
       if (serviceList.isNotEmpty) {
         if (serviceList[selectedIndex].discountAmount != 0) {
-          mSelectServiceAmount = serviceList[selectedIndex].subtotal!.toStringAsFixed(fixedDecimal);
+          mSelectServiceAmount = serviceList[selectedIndex]
+              .subtotal!
+              .toStringAsFixed(fixedDecimal);
         } else {
-          mSelectServiceAmount = serviceList[selectedIndex].totalAmount!.toStringAsFixed(fixedDecimal);
+          mSelectServiceAmount = serviceList[selectedIndex]
+              .totalAmount!
+              .toStringAsFixed(fixedDecimal);
         }
       }
       setState(() {});
@@ -335,23 +388,36 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
     });
   }
 
-  Future<void> setPolyLines({required LatLng sourceLocation, required LatLng destinationLocation, LatLng? driverLocation}) async {
+  Future<void> setPolyLines(
+      {required LatLng sourceLocation,
+      required LatLng destinationLocation,
+      LatLng? driverLocation}) async {
     polyLines.clear();
     polylineCoordinates.clear();
-    var result = await polylinePoints.getRouteBetweenCoordinates(
+    /*  var result = await polylinePoints.getRouteBetweenCoordinates(
       googleApiKey: GOOGLE_MAP_API_KEY,
       request: PolylineRequest(origin: PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
           destination: rideRequestData != null && (rideRequestData!.status == ACCEPTED || rideRequestData!.status == ARRIVING || rideRequestData!.status == ARRIVED)
               ? PointLatLng(driverLocation!.latitude, driverLocation.longitude)
               : PointLatLng(destinationLocation.latitude, destinationLocation.longitude), mode: TravelMode.driving),
+    ); */
+    var result = await polylinePoints.getRouteBetweenCoordinates(
+      googleApiKey: GOOGLE_MAP_API_KEY,
+      request: PolylineRequest(
+          origin:
+              PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+          destination: PointLatLng(
+              destinationLocation.latitude, destinationLocation.longitude),
+          mode: TravelMode.driving),
+
+      /*   rideRequestData != null &&
+              (rideRequestData!.status == ACCEPTED ||
+                  rideRequestData!.status == ARRIVING ||
+                  rideRequestData!.status == ARRIVED)
+          ? PointLatLng(driverLocation!.latitude, driverLocation.longitude)
+          : PointLatLng(
+              destinationLocation.latitude, destinationLocation.longitude), */
     );
-    // var result = await polylinePoints.getRouteBetweenCoordinates(
-    //   GOOGLE_MAP_API_KEY,
-    //   PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-    //   rideRequestData != null && (rideRequestData!.status == ACCEPTED || rideRequestData!.status == ARRIVING || rideRequestData!.status == ARRIVED)
-    //       ? PointLatLng(driverLocation!.latitude, driverLocation.longitude)
-    //       : PointLatLng(destinationLocation.latitude, destinationLocation.longitude),
-    // );
     if (result.points.isNotEmpty) {
       result.points.forEach((element) {
         polylineCoordinates.add(LatLng(element.latitude, element.longitude));
@@ -368,22 +434,35 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
   }
 
   onMapCreated(GoogleMapController controller) async {
-   try{
-     googleMapController = controller;
-     _controller.complete(controller);
-     await Future.delayed(Duration(milliseconds: 50));
-     await googleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
-         LatLngBounds(
-             southwest: LatLng(widget.sourceLatLog.latitude <= widget.destinationLatLog.latitude ? widget.sourceLatLog.latitude : widget.destinationLatLog.latitude,
-                 widget.sourceLatLog.longitude <= widget.destinationLatLog.longitude ? widget.sourceLatLog.longitude : widget.destinationLatLog.longitude),
-             northeast: LatLng(widget.sourceLatLog.latitude <= widget.destinationLatLog.latitude ? widget.destinationLatLog.latitude : widget.sourceLatLog.latitude,
-                 widget.sourceLatLog.longitude <= widget.destinationLatLog.longitude ? widget.destinationLatLog.longitude : widget.sourceLatLog.longitude)),
-         100));
-     setState(() {});
-   }catch(e){
-     if(mounted)
-     setState(() {});
-   }
+    try {
+      googleMapController = controller;
+      _controller.complete(controller);
+      await Future.delayed(Duration(milliseconds: 50));
+      await googleMapController!.animateCamera(CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+              southwest: LatLng(
+                  widget.sourceLatLog.latitude <=
+                          widget.destinationLatLog.latitude
+                      ? widget.sourceLatLog.latitude
+                      : widget.destinationLatLog.latitude,
+                  widget.sourceLatLog.longitude <=
+                          widget.destinationLatLog.longitude
+                      ? widget.sourceLatLog.longitude
+                      : widget.destinationLatLog.longitude),
+              northeast: LatLng(
+                  widget.sourceLatLog.latitude <=
+                          widget.destinationLatLog.latitude
+                      ? widget.destinationLatLog.latitude
+                      : widget.sourceLatLog.latitude,
+                  widget.sourceLatLog.longitude <=
+                          widget.destinationLatLog.longitude
+                      ? widget.destinationLatLog.longitude
+                      : widget.sourceLatLog.longitude)),
+          100));
+      setState(() {});
+    } catch (e) {
+      if (mounted) setState(() {});
+    }
   }
 
   getWalletDataApi() {
@@ -462,7 +541,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
   Future<void> getUserDetailLocation() async {
     if (rideRequestData!.status != COMPLETED) {
       getUserDetail(userId: driverData!.id).then((value) {
-        driverLatitudeLocation = LatLng(double.parse(value.data!.latitude!), double.parse(value.data!.longitude!));
+        driverLatitudeLocation = LatLng(double.parse(value.data!.latitude!),
+            double.parse(value.data!.longitude!));
         getServiceList();
       }).catchError((error) {
         log(error.toString());
@@ -490,7 +570,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
 
   @override
   void dispose() {
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((value) {
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((value) {
       polylineSource = LatLng(value.latitude, value.longitude);
     });
     WidgetsBinding.instance!.removeObserver(this);
@@ -514,13 +595,14 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(language.lblRideInformation, style: boldTextStyle()),
+                child:
+                    Text(language.lblRideInformation, style: boldTextStyle()),
               ),
               Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
                   onPressed: () {
-                    if(Navigator.canPop(context)){
+                    if (Navigator.canPop(context)) {
                       Navigator.pop(context);
                     }
                   },
@@ -564,7 +646,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                         padding: EdgeInsets.zero,
                         initialSelection: countryCode,
                         showCountryOnly: false,
-                        dialogSize: Size(MediaQuery.of(context).size.width - 60, MediaQuery.of(context).size.height * 0.6),
+                        dialogSize: Size(MediaQuery.of(context).size.width - 60,
+                            MediaQuery.of(context).size.height * 0.6),
                         showFlag: true,
                         showFlagDialog: true,
                         showOnlyCountryWhenClosed: false,
@@ -576,8 +659,11 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                         searchDecoration: InputDecoration(
                           focusColor: primaryColor,
                           iconColor: Theme.of(context).dividerColor,
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).dividerColor)),
-                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).dividerColor)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: primaryColor)),
                         ),
                         searchStyle: primaryTextStyle(),
                         onInit: (c) {
@@ -653,12 +739,11 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
     return PopScope(
       canPop: !isBooking,
       onPopInvoked: (didPop) {
-        if(didPop==false){
+        if (didPop == false) {
           SystemNavigator.pop();
         }
       },
       child: Scaffold(
-
         key: key,
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
@@ -668,8 +753,7 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
           systemOverlayStyle: SystemUiOverlayStyle(
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.dark,
-            statusBarColor: Colors.black38
-          ),
+              statusBarColor: Colors.black38),
           leadingWidth: 50,
           leading: Visibility(
             visible: !isBooking,
@@ -680,7 +764,10 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
               child: Container(
                 margin: EdgeInsets.only(left: 12, bottom: 16),
                 padding: EdgeInsets.all(0),
-                decoration: BoxDecoration(color: context.cardColor, shape: BoxShape.circle, border: Border.all(color: dividerColor)),
+                decoration: BoxDecoration(
+                    color: context.cardColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: dividerColor)),
                 child: Icon(Icons.close, color: context.iconColor, size: 20),
               ),
             ),
@@ -689,74 +776,121 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            if (sharedPref.getDouble(LATITUDE) != null && sharedPref.getDouble(LONGITUDE) != null)
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: GoogleMap(
-                padding:EdgeInsets.only(top:context.statusBarHeight + 4+24),
-                mapToolbarEnabled: false,
-                zoomControlsEnabled: false,
-                myLocationEnabled: false,
-                compassEnabled: true,
-                onMapCreated: onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: widget.sourceLatLog ?? LatLng(sharedPref.getDouble(LATITUDE)!, sharedPref.getDouble(LONGITUDE)!),
-                  zoom: 17,
+            if (sharedPref.getDouble(LATITUDE) != null &&
+                sharedPref.getDouble(LONGITUDE) != null)
+              SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: GoogleMap(
+                  padding:
+                      EdgeInsets.only(top: context.statusBarHeight + 4 + 24),
+                  mapToolbarEnabled: false,
+                  zoomControlsEnabled: false,
+                  myLocationEnabled: false,
+                  compassEnabled: true,
+                  onMapCreated: onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: widget.sourceLatLog ??
+                        LatLng(sharedPref.getDouble(LATITUDE)!,
+                            sharedPref.getDouble(LONGITUDE)!),
+                    zoom: 17,
+                  ),
+                  markers: markers,
+                  mapType: MapType.normal,
+                  polylines: polyLines,
                 ),
-                markers: markers,
-                mapType: MapType.normal,
-                polylines: polyLines,
               ),
-            ),
             Container(
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), topRight: Radius.circular(defaultRadius))),
-              child:
-              !isBooking
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(defaultRadius),
+                      topRight: Radius.circular(defaultRadius))),
+              child: !isBooking
                   ? bookRideWidget()
                   : StreamBuilder(
-                      stream: rideService.fetchRide(rideId: rideRequestId == 0 ? widget.id : rideRequestId),
+                      stream: rideService.fetchRide(
+                          rideId:
+                              rideRequestId == 0 ? widget.id : rideRequestId),
                       builder: (context, snap) {
                         if (snap.hasData) {
-                          List<FRideBookingModel> data = snap.data!.docs.map((e) => FRideBookingModel.fromJson(e.data() as Map<String, dynamic>)).toList();
-                          if(data.isEmpty){
+                          List<FRideBookingModel> data = snap.data!.docs
+                              .map((e) => FRideBookingModel.fromJson(
+                                  e.data() as Map<String, dynamic>))
+                              .toList();
+                          if (data.isEmpty) {
                             Future.delayed(
                               Duration(seconds: 1),
-                                  () {
-                                if(currentScreen==false) return;
-                                currentScreen=false;
+                              () {
+                                if (currentScreen == false) return;
+                                currentScreen = false;
                                 checkRideCancel();
-                                    // if(rideRequestData==null || (rideRequestData!=null && rideRequestData!.status != NEW_RIDE_REQUESTED)){
-                                    //   launchScreen(getContext, DashBoardScreen(), isNewTask: true);
-                                    // }
+                                // if(rideRequestData==null || (rideRequestData!=null && rideRequestData!.status != NEW_RIDE_REQUESTED)){
+                                //   launchScreen(getContext, DashBoardScreen(), isNewTask: true);
+                                // }
                               },
                             );
                           }
                           if (data.length != 0) {
                             if (data[0].onRiderStreamApiCall == 0) {
                               getCurrentRequest();
-                              rideService.updateStatusOfRide(rideID: rideRequestId == 0 ? widget.id : rideRequestId, req: {'on_rider_stream_api_call': 1});
+                              rideService.updateStatusOfRide(
+                                  rideID: rideRequestId == 0
+                                      ? widget.id
+                                      : rideRequestId,
+                                  req: {'on_rider_stream_api_call': 1});
                             }
-                            if(rideRequestData!=null && rideRequestData!.status == COMPLETED){
-                              if(currentScreen!=false){
-                                currentScreen=false;
-                                if(rideRequestData!.isRiderRated==1){
-                                  launchScreen(context, RideDetailScreen(orderId:rideRequestData!.id!), pageRouteAnimation: PageRouteAnimation.SlideBottomTop,isNewTask: true);
+                            if (rideRequestData != null &&
+                                rideRequestData!.status == COMPLETED) {
+                              if (currentScreen != false) {
+                                currentScreen = false;
+                                if (rideRequestData!.isRiderRated == 1) {
+                                  launchScreen(
+                                      context,
+                                      RideDetailScreen(
+                                          orderId: rideRequestData!.id!),
+                                      pageRouteAnimation:
+                                          PageRouteAnimation.SlideBottomTop,
+                                      isNewTask: true);
                                   // launchScreen(context, DashBoardScreen(), isNewTask: true);
-                                }else{
-                                  Future.delayed(Duration(seconds: 1),() {
-                                    launchScreen(context, ReviewScreen(rideRequest: rideRequestData!, driverData: driverData), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
-                                  },);
+                                } else {
+                                  Future.delayed(
+                                    Duration(seconds: 1),
+                                    () {
+                                      launchScreen(
+                                          context,
+                                          ReviewScreen(
+                                              rideRequest: rideRequestData!,
+                                              driverData: driverData),
+                                          pageRouteAnimation:
+                                              PageRouteAnimation.SlideBottomTop,
+                                          isNewTask: true);
+                                    },
+                                  );
                                 }
-                              };
+                              }
+                              ;
                               // launchScreen(context, ReviewScreen(rideRequest: rideRequestData!, driverData: driverData), pageRouteAnimation: PageRouteAnimation.SlideBottomTop, isNewTask: true);
                             }
-                              // widget.rideRequest!.status == COMPLETED,
+                            // widget.rideRequest!.status == COMPLETED,
                             return rideRequestData != null
                                 ? rideRequestData!.status == NEW_RIDE_REQUESTED
-                                    ? BookingWidget(id: rideRequestId == 0 ? widget.id : rideRequestId, isLast: true)
-                                    : RideAcceptWidget(rideRequest: rideRequestData, driverData: driverData)
+                                    ? BookingWidget(
+                                        id: rideRequestId == 0
+                                            ? widget.id
+                                            : rideRequestId,
+                                        isLast: true)
+                                    : RideAcceptWidget(
+                                        rideRequest: rideRequestData,
+                                        driverData: driverData)
                                 // :SizedBox();
-                                :data[0]!=null && data[0].status== NEW_RIDE_REQUESTED?BookingWidget(id: rideRequestId == 0 ? widget.id : rideRequestId, isLast: true):loaderWidget();
+                                : data[0] != null &&
+                                        data[0].status == NEW_RIDE_REQUESTED
+                                    ? BookingWidget(
+                                        id: rideRequestId == 0
+                                            ? widget.id
+                                            : rideRequestId,
+                                        isLast: true)
+                                    : loaderWidget();
                           } else {
                             return SizedBox();
                           }
@@ -766,7 +900,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                       }),
             ),
             Observer(builder: (context) {
-              return Visibility(visible: appStore.isLoading, child: loaderWidget());
+              return Visibility(
+                  visible: appStore.isLoading, child: loaderWidget());
             }),
           ],
         ),
@@ -780,16 +915,27 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
         Visibility(
           visible: serviceList.isNotEmpty,
           child: Container(
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), topRight: Radius.circular(defaultRadius))),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(defaultRadius),
+                    topRight: Radius.circular(defaultRadius))),
             child: SingleChildScrollView(
-              child: isRideSelection == false && appStore.isRiderForAnother == "1" ? riderSelectionWidget() : serviceSelectWidget(),
+              child:
+                  isRideSelection == false && appStore.isRiderForAnother == "1"
+                      ? riderSelectionWidget()
+                      : serviceSelectWidget(),
             ),
           ),
         ),
         Visibility(
           visible: !appStore.isLoading && serviceList.isEmpty,
           child: Container(
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(defaultRadius), topRight: Radius.circular(defaultRadius))),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(defaultRadius),
+                    topRight: Radius.circular(defaultRadius))),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -816,7 +962,9 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
               margin: EdgeInsets.only(bottom: 16),
               height: 5,
               width: 70,
-              decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(defaultRadius)),
+              decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(defaultRadius)),
             ),
           ),
           Text(language.whoWillBeSeated, style: primaryTextStyle(size: 18)),
@@ -833,7 +981,10 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                           Container(
                             height: 70,
                             width: 70,
-                            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: textSecondaryColorGlobal, width: 1)),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: textSecondaryColorGlobal, width: 1)),
                             padding: EdgeInsets.all(12),
                             child: Image.asset(ic_add_user, fit: BoxFit.fill),
                           ),
@@ -841,7 +992,9 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                             Container(
                               height: 70,
                               width: 70,
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black54),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black54),
                               child: Icon(Icons.check, color: Colors.white),
                             ),
                         ],
@@ -855,7 +1008,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                     showDialog(
                       context: context,
                       builder: (_) {
-                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                        return StatefulBuilder(builder:
+                            (BuildContext context, StateSetter setState) {
                           return AlertDialog(
                             contentPadding: EdgeInsets.all(0),
                             content: mSomeOnElse(),
@@ -875,13 +1029,19 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(40),
-                            child: commonCachedNetworkImage(appStore.userProfile.validate(), height: 70, width: 70, fit: BoxFit.cover),
+                            child: commonCachedNetworkImage(
+                                appStore.userProfile.validate(),
+                                height: 70,
+                                width: 70,
+                                fit: BoxFit.cover),
                           ),
                           if (isRideForOther)
                             Container(
                               height: 70,
                               width: 70,
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black54),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black54),
                               child: Icon(Icons.check, color: Colors.white),
                             ),
                         ],
@@ -903,11 +1063,13 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
             color: primaryColor,
             onTap: () async {
               if (!isRideForOther) {
-                if (nameController.text.isEmptyOrNull || phoneController.text.isEmptyOrNull) {
+                if (nameController.text.isEmptyOrNull ||
+                    phoneController.text.isEmptyOrNull) {
                   showDialog(
                     context: context,
                     builder: (_) {
-                      return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                      return StatefulBuilder(builder:
+                          (BuildContext context, StateSetter setState) {
                         return AlertDialog(
                           contentPadding: EdgeInsets.all(0),
                           content: mSomeOnElse(),
@@ -944,7 +1106,9 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
             margin: EdgeInsets.only(bottom: 8, top: 16),
             height: 5,
             width: 70,
-            decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(defaultRadius)),
+            decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(defaultRadius)),
           ),
         ),
         SingleChildScrollView(
@@ -954,13 +1118,15 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
             children: serviceList.map((e) {
               return GestureDetector(
                 onTap: () {
-                  if(cashList.length>1){
-                    oldPaymentType=paymentMethodType;
+                  if (cashList.length > 1) {
+                    oldPaymentType = paymentMethodType;
                   }
                   if (e.discountAmount != 0) {
-                    mSelectServiceAmount = e.subtotal!.toStringAsFixed(fixedDecimal);
+                    mSelectServiceAmount =
+                        e.subtotal!.toStringAsFixed(fixedDecimal);
                   } else {
-                    mSelectServiceAmount = e.totalAmount!.toStringAsFixed(fixedDecimal);
+                    mSelectServiceAmount =
+                        e.totalAmount!.toStringAsFixed(fixedDecimal);
                   }
                   selectedIndex = serviceList.indexOf(e);
                   servicesListData = e;
@@ -968,16 +1134,20 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                     locationDistance = e.dropoffDistanceInKm!.toDouble();
                     distanceUnit = DISTANCE_TYPE_KM;
                   } else {
-                    locationDistance = e.dropoffDistanceInKm!.toDouble() * 0.621371;
+                    locationDistance =
+                        e.dropoffDistanceInKm!.toDouble() * 0.621371;
                     distanceUnit = DISTANCE_TYPE_MILE;
                   }
                   durationOfDrop = serviceList[0].duration!.toDouble();
                   paymentMethodType = e.paymentMethod!;
 
                   // cashList =
-                  paymentMethodType == CASH_WALLET ? cashList = [CASH, WALLET] : cashList = [paymentMethodType];
-                  if(e.paymentMethod==CASH_WALLET && oldPaymentType!=null){
-                    paymentMethodType=oldPaymentType!;
+                  paymentMethodType == CASH_WALLET
+                      ? cashList = [CASH, WALLET]
+                      : cashList = [paymentMethodType];
+                  if (e.paymentMethod == CASH_WALLET &&
+                      oldPaymentType != null) {
+                    paymentMethodType = oldPaymentType!;
                   }
                   setState(() {});
                 },
@@ -985,7 +1155,9 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                   margin: EdgeInsets.only(top: 16, left: 8, right: 8),
                   decoration: BoxDecoration(
-                    color: selectedIndex == serviceList.indexOf(e) ? primaryColor : Colors.white,
+                    color: selectedIndex == serviceList.indexOf(e)
+                        ? primaryColor
+                        : Colors.white,
                     border: Border.all(color: dividerColor),
                     borderRadius: BorderRadius.circular(defaultRadius),
                   ),
@@ -993,16 +1165,33 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      commonCachedNetworkImage(e.serviceImage.validate(), height: 50, width: 100, fit: BoxFit.cover, alignment: Alignment.center),
+                      commonCachedNetworkImage(e.serviceImage.validate(),
+                          height: 50,
+                          width: 100,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center),
                       SizedBox(height: 6),
-                      Text(e.name.validate(), style: boldTextStyle(color: selectedIndex == serviceList.indexOf(e) ? Colors.white : textPrimaryColorGlobal)),
+                      Text(e.name.validate(),
+                          style: boldTextStyle(
+                              color: selectedIndex == serviceList.indexOf(e)
+                                  ? Colors.white
+                                  : textPrimaryColorGlobal)),
                       SizedBox(height: 6),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(language.capacity, style: secondaryTextStyle(size: 12, color: selectedIndex == serviceList.indexOf(e) ? Colors.white : textPrimaryColorGlobal)),
+                          Text(language.capacity,
+                              style: secondaryTextStyle(
+                                  size: 12,
+                                  color: selectedIndex == serviceList.indexOf(e)
+                                      ? Colors.white
+                                      : textPrimaryColorGlobal)),
                           SizedBox(width: 4),
-                          Text(e.capacity.toString() + " + 1", style: secondaryTextStyle(color: selectedIndex == serviceList.indexOf(e) ? Colors.white : textPrimaryColorGlobal)),
+                          Text(e.capacity.toString() + " + 1",
+                              style: secondaryTextStyle(
+                                  color: selectedIndex == serviceList.indexOf(e)
+                                      ? Colors.white
+                                      : textPrimaryColorGlobal)),
                         ],
                       ),
                       SizedBox(height: 6),
@@ -1014,20 +1203,34 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                printAmount(e.totalAmount!.toStringAsFixed(digitAfterDecimal)),
+                                printAmount(e.totalAmount!
+                                    .toStringAsFixed(digitAfterDecimal)),
                                 style: e.discountAmount != 0
                                     ? secondaryTextStyle(
-                                        color: selectedIndex == serviceList.indexOf(e) ? Colors.white : textSecondaryColorGlobal,
-                                        textDecoration: e.discountAmount != 0 ? TextDecoration.lineThrough : null,
+                                        color: selectedIndex ==
+                                                serviceList.indexOf(e)
+                                            ? Colors.white
+                                            : textSecondaryColorGlobal,
+                                        textDecoration: e.discountAmount != 0
+                                            ? TextDecoration.lineThrough
+                                            : null,
                                       )
                                     : boldTextStyle(
-                                        color: selectedIndex == serviceList.indexOf(e) ? Colors.white : textPrimaryColorGlobal,
+                                        color: selectedIndex ==
+                                                serviceList.indexOf(e)
+                                            ? Colors.white
+                                            : textPrimaryColorGlobal,
                                       ),
                               ),
                               if (e.discountAmount != 0)
                                 Text(
-                                  printAmount(e.subtotal!.toStringAsFixed(digitAfterDecimal)),
-                                  style: boldTextStyle(color: selectedIndex == serviceList.indexOf(e) ? Colors.white : primaryColor),
+                                  printAmount(e.subtotal!
+                                      .toStringAsFixed(digitAfterDecimal)),
+                                  style: boldTextStyle(
+                                      color: selectedIndex ==
+                                              serviceList.indexOf(e)
+                                          ? Colors.white
+                                          : primaryColor),
                                 ),
                             ],
                           ),
@@ -1037,13 +1240,22 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(defaultRadius), topLeft: Radius.circular(defaultRadius))),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topRight:
+                                            Radius.circular(defaultRadius),
+                                        topLeft:
+                                            Radius.circular(defaultRadius))),
                                 builder: (_) {
                                   return CarDetailWidget(service: e);
                                 },
                               );
                             },
-                            child: Icon(Icons.info_outline_rounded, size: 16, color: selectedIndex == serviceList.indexOf(e) ? Colors.white : textPrimaryColorGlobal),
+                            child: Icon(Icons.info_outline_rounded,
+                                size: 16,
+                                color: selectedIndex == serviceList.indexOf(e)
+                                    ? Colors.white
+                                    : textPrimaryColorGlobal),
                           ),
                         ],
                       ),
@@ -1060,7 +1272,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
             showDialog(
               context: context,
               builder: (_) {
-                return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                return StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
                   return Observer(builder: (context) {
                     return Stack(
                       children: [
@@ -1072,33 +1285,42 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(language.paymentMethod, style: boldTextStyle()),
+                                    Text(language.paymentMethod,
+                                        style: boldTextStyle()),
                                     inkWellWidget(
                                       onTap: () {
                                         Navigator.pop(context);
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(6),
-                                        decoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
-                                        child: Icon(Icons.close, color: Colors.white),
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            shape: BoxShape.circle),
+                                        child: Icon(Icons.close,
+                                            color: Colors.white),
                                       ),
                                     )
                                   ],
                                 ),
                                 SizedBox(height: 4),
-                                Text(language.chooseYouPaymentLate, style: secondaryTextStyle()),
-                                Text(isRideForOther.toString(), style: secondaryTextStyle()),
+                                Text(language.chooseYouPaymentLate,
+                                    style: secondaryTextStyle()),
+                                Text(isRideForOther.toString(),
+                                    style: secondaryTextStyle()),
                                 isRideForOther == false
                                     ? RadioListTile(
                                         contentPadding: EdgeInsets.zero,
                                         dense: true,
-                                        controlAffinity: ListTileControlAffinity.trailing,
+                                        controlAffinity:
+                                            ListTileControlAffinity.trailing,
                                         activeColor: primaryColor,
                                         value: CASH,
                                         groupValue: CASH,
-                                        title: Text(language.cash, style: boldTextStyle()),
+                                        title: Text(language.cash,
+                                            style: boldTextStyle()),
                                         onChanged: (String? val) {},
                                       )
                                     : Column(
@@ -1106,11 +1328,17 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                                           return RadioListTile(
                                             dense: true,
                                             contentPadding: EdgeInsets.zero,
-                                            controlAffinity: ListTileControlAffinity.trailing,
+                                            controlAffinity:
+                                                ListTileControlAffinity
+                                                    .trailing,
                                             activeColor: primaryColor,
                                             value: e,
-                                            groupValue: paymentMethodType == CASH_WALLET ? CASH : paymentMethodType,
-                                            title: Text(paymentStatus(e), style: boldTextStyle()),
+                                            groupValue:
+                                                paymentMethodType == CASH_WALLET
+                                                    ? CASH
+                                                    : paymentMethodType,
+                                            title: Text(paymentStatus(e),
+                                                style: boldTextStyle()),
                                             onChanged: (String? val) {
                                               paymentMethodType = val!;
                                               setState(() {});
@@ -1124,7 +1352,8 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                                   autoFocus: false,
                                   textFieldType: TextFieldType.EMAIL,
                                   keyboardType: TextInputType.emailAddress,
-                                  errorThisFieldRequired: language.thisFieldRequired,
+                                  errorThisFieldRequired:
+                                      language.thisFieldRequired,
                                   readOnly: true,
                                   onTap: () async {
                                     var data = await showModalBottomSheet(
@@ -1136,7 +1365,7 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                                     );
                                     if (data != null) {
                                       promoCode.text = data;
-                                      setState((){});
+                                      setState(() {});
                                     }
                                   },
                                   decoration: inputDecoration(context,
@@ -1146,9 +1375,11 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                                               onTap: () {
                                                 getNewService(coupon: false);
                                                 promoCode.clear();
-                                                setState((){});
+                                                setState(() {});
                                               },
-                                              child: Icon(Icons.close, color: Colors.black, size: 25),
+                                              child: Icon(Icons.close,
+                                                  color: Colors.black,
+                                                  size: 25),
                                             )
                                           : null),
                                 ),
@@ -1171,7 +1402,9 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                           ),
                         ),
                         Observer(builder: (context) {
-                          return Visibility(visible: appStore.isLoading, child: loaderWidget());
+                          return Visibility(
+                              visible: appStore.isLoading,
+                              child: loaderWidget());
                         }),
                       ],
                     );
@@ -1184,7 +1417,9 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
           },
           child: Container(
             margin: EdgeInsets.fromLTRB(16, 8, 16, 16),
-            decoration: BoxDecoration(border: Border.all(color: dividerColor), borderRadius: BorderRadius.circular(defaultRadius)),
+            decoration: BoxDecoration(
+                border: Border.all(color: dividerColor),
+                borderRadius: BorderRadius.circular(defaultRadius)),
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1197,8 +1432,11 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                     Container(
                       padding: EdgeInsets.all(4),
                       margin: EdgeInsets.only(top: 4),
-                      decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(defaultRadius)),
-                      child: Icon(Icons.wallet_outlined, size: 20, color: Colors.white),
+                      decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(defaultRadius)),
+                      child: Icon(Icons.wallet_outlined,
+                          size: 20, color: Colors.white),
                     ),
                     SizedBox(width: 10),
                     Expanded(
@@ -1217,28 +1455,52 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
                                   style: boldTextStyle(size: 14),
                                 ),
                               ),
-                              if (mSelectServiceAmount != null && paymentMethodType != CASH_WALLET && paymentMethodType == WALLET && double.parse(mSelectServiceAmount!) >= mTotalAmount.toDouble())
+                              if (mSelectServiceAmount != null &&
+                                  paymentMethodType != CASH_WALLET &&
+                                  paymentMethodType == WALLET &&
+                                  double.parse(mSelectServiceAmount!) >=
+                                      mTotalAmount.toDouble())
                                 inkWellWidget(
                                   onTap: () {
-                                    oldPaymentType=paymentMethodType;
-                                    launchScreen(context, WalletScreen()).then((value) {
+                                    oldPaymentType = paymentMethodType;
+                                    launchScreen(context, WalletScreen())
+                                        .then((value) {
                                       init();
                                     });
                                   },
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(border: Border.all(color: dividerColor), color: primaryColor, borderRadius: radius()),
-                                    child: Text(language.addMoney, style: primaryTextStyle(size: 14, color: Colors.white)),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: dividerColor),
+                                        color: primaryColor,
+                                        borderRadius: radius()),
+                                    child: Text(language.addMoney,
+                                        style: primaryTextStyle(
+                                            size: 14, color: Colors.white)),
                                   ),
                                 )
                             ],
                           ),
                           SizedBox(height: 4),
-                          Text(paymentMethodType != CASH_WALLET ? language.forInstantPayment : language.lblPayWhenEnds, style: secondaryTextStyle(size: 12)),
-                          if (mSelectServiceAmount != null && paymentMethodType != CASH_WALLET && paymentMethodType == WALLET && double.parse(mSelectServiceAmount!) >= mTotalAmount.toDouble())
+                          Text(
+                              paymentMethodType != CASH_WALLET
+                                  ? language.forInstantPayment
+                                  : language.lblPayWhenEnds,
+                              style: secondaryTextStyle(size: 12)),
+                          if (mSelectServiceAmount != null &&
+                              paymentMethodType != CASH_WALLET &&
+                              paymentMethodType == WALLET &&
+                              double.parse(mSelectServiceAmount!) >=
+                                  mTotalAmount.toDouble())
                             Padding(
                               padding: EdgeInsets.only(top: 4),
-                              child: Text(language.lblLessWalletAmount, style: boldTextStyle(size: 12, color: Colors.red, letterSpacing: 0.5, weight: FontWeight.w500)),
+                              child: Text(language.lblLessWalletAmount,
+                                  style: boldTextStyle(
+                                      size: 12,
+                                      color: Colors.red,
+                                      letterSpacing: 0.5,
+                                      weight: FontWeight.w500)),
                             ),
                         ],
                       ),
@@ -1253,7 +1515,11 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
           padding: EdgeInsets.only(left: 16, right: 16, bottom: 12),
           child: AppButtonWidget(
             onTap: () {
-              if (mSelectServiceAmount != null && paymentMethodType != CASH_WALLET && paymentMethodType == WALLET && double.parse(mSelectServiceAmount!) >= mTotalAmount.toDouble()){
+              if (mSelectServiceAmount != null &&
+                  paymentMethodType != CASH_WALLET &&
+                  paymentMethodType == WALLET &&
+                  double.parse(mSelectServiceAmount!) >=
+                      mTotalAmount.toDouble()) {
                 return toast(language.noBalanceValidate);
               }
               saveBookingData();
@@ -1314,9 +1580,13 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
     await saveRideRequest(req).then((value) async {
       rideRequestId = value.rideRequestId!;
       rideBookingModel.rideId = rideRequestId;
-      Future.delayed(Duration(seconds: 3),() {
-        rideService.updateStatusOfRide(rideID: rideRequestId, req: {'on_stream_api_call': 0});
-      },);
+      Future.delayed(
+        Duration(seconds: 3),
+        () {
+          rideService.updateStatusOfRide(
+              rideID: rideRequestId, req: {'on_stream_api_call': 0});
+        },
+      );
       // await rideService.addRide(rideBookingModel, rideRequestId).then((value) => null);
       widget.isCurrentRequest = true;
       isBooking = true;
@@ -1328,17 +1598,20 @@ class NewEstimateRideListWidgetState extends State<NewEstimateRideListWidget> wi
     });
   }
 
-  void checkRideCancel() async{
-    if(rideCancelDetected) return;
-    rideCancelDetected=true;
+  void checkRideCancel() async {
+    if (rideCancelDetected) return;
+    rideCancelDetected = true;
     appStore.setLoading(true);
     sharedPref.remove(IS_TIME);
     sharedPref.remove(REMAINING_TIME);
-    await rideDetail(orderId:  rideRequestId == 0 ? widget.id : rideRequestId).then((value) {
+    await rideDetail(orderId: rideRequestId == 0 ? widget.id : rideRequestId)
+        .then((value) {
       appStore.setLoading(false);
-      if(value.data!.status==CANCELED && value.data!.cancelBy==DRIVER){
-        launchScreen(getContext, DashBoardScreen(cancelReason:value.data!.reason), isNewTask: true);
-      }else{
+      if (value.data!.status == CANCELED && value.data!.cancelBy == DRIVER) {
+        launchScreen(
+            getContext, DashBoardScreen(cancelReason: value.data!.reason),
+            isNewTask: true);
+      } else {
         launchScreen(getContext, DashBoardScreen(), isNewTask: true);
       }
     }).catchError((error) {

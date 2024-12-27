@@ -52,7 +52,7 @@ dependencies:
   geocoding: ^3.0.0
   google_maps_flutter: ^2.9.0
   flutter_polyline_points: ^2.1.0
-  google_maps_place_picker_mb: ^3.1.2
+  #google_maps_place_picker_mb: ^3.1.2
 
   # IMAGES
   image_picker: ^1.1.2
@@ -119,7 +119,10 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-
+  #google_maps_place_picker_mb: ^3.1.2
+  map_location_picker: ^1.2.8+3
+  google_places_flutter: ^2.0.9
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

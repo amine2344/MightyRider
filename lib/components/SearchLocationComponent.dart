@@ -3,15 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart'
-    as rd;
 
-import 'package:taxi_booking/screens/GoogleMapScreen.dart';
+import 'package:map_location_picker/map_location_picker.dart';
 import 'package:taxi_booking/utils/Extensions/StringExtensions.dart';
 import '../main.dart';
 import '../model/LocationModel.dart';
 import '../screens/NewEstimateRideListWidget.dart';
-import '../model/GoogleMapSearchModel.dart';
+import '../model/GoogleMapSearchModel.dart' as Lmd;
 import '../model/ServiceModel.dart';
 import '../network/RestApis.dart';
 import '../utils/Colors.dart';
@@ -19,6 +17,7 @@ import '../utils/Common.dart';
 import '../utils/Constants.dart';
 import '../utils/Extensions/AppButtonWidget.dart';
 import '../utils/Extensions/app_common.dart';
+import '../screens/GoogleMapScreen.dart';
 
 class SearchLocationComponent extends StatefulWidget {
   final String title;
@@ -43,7 +42,7 @@ class SearchLocationComponentState extends State<SearchLocationComponent> {
   double? totalAmount;
 
   List<ServiceList> list = [];
-  List<Prediction> listAddress = [];
+  List<Lmd.Prediction> listAddress = [];
 
   @override
   void initState() {
@@ -244,7 +243,7 @@ class SearchLocationComponentState extends State<SearchLocationComponent> {
                     shrinkWrap: true,
                     itemCount: listAddress.length,
                     itemBuilder: (context, index) {
-                      Prediction mData = listAddress[index];
+                      Lmd.Prediction mData = listAddress[index];
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(Icons.location_on_outlined,
@@ -285,7 +284,7 @@ class SearchLocationComponentState extends State<SearchLocationComponent> {
                                   data!.location!.lat!, data.location!.lng!);
                               if (!sourceLocation.text.isEmptyOrNull &&
                                   !destinationLocation.text.isEmptyOrNull) {
-                                launchScreen(
+                                await launchScreen(
                                     context,
                                     NewEstimateRideListWidget(
                                         sourceLatLog: polylineSource,
@@ -314,20 +313,22 @@ class SearchLocationComponentState extends State<SearchLocationComponent> {
                     onTap: () async {
                       if (sourceFocus.hasFocus) {
                         isDone = true;
-                        rd.PickResult selectedPlace = await launchScreen(
-                            context, GoogleMapScreen(isDestination: false),
-                            pageRouteAnimation:
-                                PageRouteAnimation.SlideBottomTop);
+                        PlacesDetailsResponse selectedPlace =
+                            await launchScreen(
+                                context, GoogleMapScreen(isDestination: false),
+                                pageRouteAnimation:
+                                    PageRouteAnimation.SlideBottomTop);
                         log(selectedPlace);
-                        mLocation = selectedPlace.formattedAddress!;
-                        sourceLocation.text = selectedPlace.formattedAddress!;
+                        mLocation = selectedPlace.result.formattedAddress!;
+                        sourceLocation.text =
+                            selectedPlace.result.formattedAddress!;
                         polylineSource = LatLng(
-                            selectedPlace.geometry!.location.lat,
-                            selectedPlace.geometry!.location.lng);
+                            selectedPlace.result.geometry!.location.lat,
+                            selectedPlace.result.geometry!.location.lng);
 
                         if (sourceLocation.text.isNotEmpty &&
                             destinationLocation.text.isNotEmpty) {
-                          launchScreen(
+                          await launchScreen(
                               context,
                               NewEstimateRideListWidget(
                                   sourceLatLog: polylineSource,
@@ -343,23 +344,24 @@ class SearchLocationComponentState extends State<SearchLocationComponent> {
                           desFocus.nextFocus();
                         }
                       } else if (desFocus.hasFocus) {
-                        rd.PickResult selectedPlace = await launchScreen(
-                            context, GoogleMapScreen(isDestination: true),
-                            pageRouteAnimation:
-                                PageRouteAnimation.SlideBottomTop);
+                        PlacesDetailsResponse selectedPlace =
+                            await launchScreen(
+                                context, GoogleMapScreen(isDestination: true),
+                                pageRouteAnimation:
+                                    PageRouteAnimation.SlideBottomTop);
 
                         destinationLocation.text =
-                            selectedPlace.formattedAddress!;
+                            selectedPlace.result.formattedAddress!;
                         polylineDestination = LatLng(
-                            selectedPlace.geometry!.location.lat,
-                            selectedPlace.geometry!.location.lng);
+                            selectedPlace.result.geometry!.location.lat,
+                            selectedPlace.result.geometry!.location.lng);
 
                         if (sourceLocation.text.isNotEmpty &&
                             destinationLocation.text.isNotEmpty) {
                           log(sourceLocation.text);
                           log(destinationLocation.text);
 
-                          launchScreen(
+                          await launchScreen(
                               context,
                               NewEstimateRideListWidget(
                                   sourceLatLog: polylineSource,

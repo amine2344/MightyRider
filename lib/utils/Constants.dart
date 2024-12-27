@@ -7,7 +7,7 @@ const mAppName = 'Mighty Rider';
 //endregion
 
 // region Google map key
-const GOOGLE_MAP_API_KEY = 'AIzaSyB-pUtWq3NApzhtnC4rdZSrBANqXv5NwF4';
+const GOOGLE_MAP_API_KEY = 'AIzaSyAMxX0K5hjbhHar0MDwoFdO3atJZj44x5E';
 //endregion
 
 //region DomainUrl

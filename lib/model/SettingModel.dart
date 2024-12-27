@@ -48,7 +48,9 @@ class SettingModel {
       facebookUrl: json['facebook_url'],
       id: json['id'],
       instagramUrl: json['instagram_url'],
-      languageOption: json['language_option'] != null ? new List<String>.from(json['language_option']) : null,
+      languageOption: json['language_option'] != null
+          ? [] /* new List<String>.from(json['language_option']??[""]) */
+          : [],
       linkedinUrl: json['linkedin_url'],
       //notification_settings: json['notification_settings'] != null ? (json['notification_settings'] as List).map((i) => Object.fromJson(i)).toList() : null,
       siteCopyright: json['site_copyright'],
