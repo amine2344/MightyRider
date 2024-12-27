@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+//import 'package:google_sign_in/google_sign_in.dart';
 import '../screens/EditProfileScreen.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import '../utils/Extensions/StringExtensions.dart';
@@ -38,7 +38,11 @@ Future<void> loginWithOTP(BuildContext context, String phoneNumber) async {
       appStore.setLoading(false);
       await showDialog(
         context: context,
-        builder: (context) => AlertDialog(content: OTPDialog(verificationId: verificationId, isCodeSent: true, phoneNumber: phoneNumber)),
+        builder: (context) => AlertDialog(
+            content: OTPDialog(
+                verificationId: verificationId,
+                isCodeSent: true,
+                phoneNumber: phoneNumber)),
         barrierDismissible: false,
       );
     },
@@ -48,7 +52,7 @@ Future<void> loginWithOTP(BuildContext context, String phoneNumber) async {
   );
 }
 
-class GoogleAuthServices {
+/* class GoogleAuthServices {
   final GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: [
       'email',
@@ -90,7 +94,7 @@ class GoogleAuthServices {
     }
   }
 }
-
+ */
 /// Sign-In with Apple.
 Future<void> appleLogIn() async {
   if (await TheAppleSignIn.isAvailable()) {
@@ -103,7 +107,8 @@ Future<void> appleLogIn() async {
         final oAuthProvider = OAuthProvider('apple.com');
         final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken!),
-          accessToken: String.fromCharCodes(appleIdCredential.authorizationCode!),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode!),
         );
         final authResult = await _auth.signInWithCredential(credential);
         final user = authResult.user!;
@@ -112,7 +117,8 @@ Future<void> appleLogIn() async {
           await saveAppleData(result);
         }
 
-        await loginFromFirebase(user, LoginTypeApple, String.fromCharCodes(appleIdCredential.authorizationCode!));
+        await loginFromFirebase(user, LoginTypeApple,
+            String.fromCharCodes(appleIdCredential.authorizationCode!));
         break;
       case AuthorizationStatus.error:
         throw ("Sign in failed: ${result.error!.localizedDescription}");
@@ -126,8 +132,10 @@ Future<void> appleLogIn() async {
 
 Future<void> saveAppleData(AuthorizationResult result) async {
   await sharedPref.setString('appleEmail', result.credential!.email.validate());
-  await sharedPref.setString('appleGivenName', result.credential!.fullName!.givenName.validate());
-  await sharedPref.setString('appleFamilyName', result.credential!.fullName!.familyName.validate());
+  await sharedPref.setString(
+      'appleGivenName', result.credential!.fullName!.givenName.validate());
+  await sharedPref.setString(
+      'appleFamilyName', result.credential!.fullName!.familyName.validate());
 }
 
 Future deleteUser(String email, String password) async {
@@ -137,12 +145,15 @@ Future deleteUser(String email, String password) async {
   }
 }
 
-Future<void> loginFromFirebase(User currentUser, String loginType, String? accessToken) async {
+Future<void> loginFromFirebase(
+    User currentUser, String loginType, String? accessToken) async {
   String firstName = '';
   String lastName = '';
   if (loginType == LoginTypeGoogle) {
-    if (currentUser.displayName.validate().split(' ').length >= 1) firstName = currentUser.displayName.splitBefore(' ');
-    if (currentUser.displayName.validate().split(' ').length >= 2) lastName = currentUser.displayName.splitAfter(' ');
+    if (currentUser.displayName.validate().split(' ').length >= 1)
+      firstName = currentUser.displayName.splitBefore(' ');
+    if (currentUser.displayName.validate().split(' ').length >= 2)
+      lastName = currentUser.displayName.splitAfter(' ');
   } else {
     firstName = sharedPref.getString('appleGivenName').validate();
     lastName = sharedPref.getString('appleFamilyName').validate();
@@ -157,36 +168,45 @@ Future<void> loginFromFirebase(User currentUser, String loginType, String? acces
     "uid": currentUser.uid,
     'accessToken': accessToken,
     "player_id": sharedPref.getString(PLAYER_ID).validate(),
-    if (!currentUser.phoneNumber.isEmptyOrNull) 'contact_number': currentUser.phoneNumber.validate(),
+    if (!currentUser.phoneNumber.isEmptyOrNull)
+      'contact_number': currentUser.phoneNumber.validate(),
   };
 
   await logInApi(req, isSocialLogin: true).then((value) async {
     AuthServices authService = AuthServices();
-    authService.loginFromFirebaseUser(currentUser, loginDetail: value, fullName: (firstName + lastName).toLowerCase()).then((value) {});
+    authService
+        .loginFromFirebaseUser(currentUser,
+            loginDetail: value, fullName: (firstName + lastName).toLowerCase())
+        .then((value) {});
     Navigator.pop(getContext);
     sharedPref.setString(UID, currentUser.uid);
     await appStore.setUserProfile(currentUser.photoURL.toString());
-    await sharedPref.setString(USER_PROFILE_PHOTO, currentUser.photoURL.toString());
+    await sharedPref.setString(
+        USER_PROFILE_PHOTO, currentUser.photoURL.toString());
     if (value.data!.contactNumber.isEmptyOrNull) {
-      launchScreen(getContext, EditProfileScreen(isGoogle: true), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+      launchScreen(getContext, EditProfileScreen(isGoogle: true),
+          isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
     } else {
       if (value.data!.uid.isEmptyOrNull) {
         await updateProfile(
           uid: sharedPref.getString(UID).toString(),
           userEmail: currentUser.email.validate(),
         ).then((value) {
-          launchScreen(getContext, DashBoardScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+          launchScreen(getContext, DashBoardScreen(),
+              isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
         }).catchError((error) {
           log(error.toString());
         });
       } else if (value.data!.playerId.isEmptyOrNull) {
         await updatePlayerId().then((value) {
-          launchScreen(getContext, DashBoardScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+          launchScreen(getContext, DashBoardScreen(),
+              isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
         }).catchError((error) {
           log(error.toString());
         });
       } else {
-        launchScreen(getContext, DashBoardScreen(), isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
+        launchScreen(getContext, DashBoardScreen(),
+            isNewTask: true, pageRouteAnimation: PageRouteAnimation.Slide);
       }
     }
   }).catchError((e) {

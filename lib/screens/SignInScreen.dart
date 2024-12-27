@@ -36,7 +36,7 @@ class SignInScreenState extends State<SignInScreen> {
   UserModel userModel = UserModel();
 
   AuthServices authService = AuthServices();
-  GoogleAuthServices googleAuthService = GoogleAuthServices();
+//  GoogleAuthServices googleAuthService = GoogleAuthServices();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
@@ -142,12 +142,13 @@ class SignInScreenState extends State<SignInScreen> {
     hideKeyboard(context);
     appStore.setLoading(true);
 
-    await googleAuthService.signInWithGoogle(context).then((value) async {
+    /*   await googleAuthService.signInWithGoogle(context).then((value) async {
       appStore.setLoading(false);
     }).catchError((e) {
       appStore.setLoading(false);
       toast(e.toString());
     });
+ */
   }
 
   appleLoginApi() async {

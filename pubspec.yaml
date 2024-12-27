@@ -107,7 +107,7 @@ dependencies:
 #  mqtt_client: ^10.2.0
 
   # Social Login
-  google_sign_in: ^6.2.1
+  #google_sign_in: ^6.2.1
   the_apple_sign_in: ^1.1.1
 
   # DOWNLOAD INVOICE PDF
