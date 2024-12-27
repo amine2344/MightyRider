@@ -30,17 +30,20 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
+  pod 'GTMSessionFetcher/Core', '>= 3.4.0'
+  pod 'OneSignalXCFramework', '5.2.9' 
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
 target 'OneSignalNotificationServiceExtension' do
   use_frameworks!
-  pod 'OneSignalXCFramework', '>= 5.0.0', '< 6.0'
+  pod 'OneSignalXCFramework', '>= 5.2.9', '< 6.0'
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
+    
     if target.name == 'BoringSSL-GRPC'
       target.source_build_phase.files.each do |file|
         if file.settings && file.settings['COMPILER_FLAGS']
@@ -49,6 +52,9 @@ post_install do |installer|
           file.settings['COMPILER_FLAGS'] = flags.join(' ')
         end
       end
+    end
+    if pod.name.eql?('OneSignalXCFramework')
+      pod.specification.version = '5.2.9-beta'
     end
     flutter_additional_ios_build_settings(target)
   end
