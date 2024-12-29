@@ -71,9 +71,14 @@ dependencies:
   #firebase_crashlytics: ^4.1.0
   #firebase_core: ^3.4.0
   
-  firebase_storage: 
-  firebase_database:   
-  paginate_firestore: 
+  firebase_storage: ^12.2.0 
+  firebase_database: ^11.1.0
+  paginate_firestore: ^1.0.3+1
+
+
+  firebase_crashlytics: any
+
+
 #  paginate_firestore:
 #    path: ./lib/my_packages/paginate_firestore-master
 #  flutter_paystack:
@@ -122,10 +127,6 @@ dependencies:
   #google_maps_place_picker_mb: ^3.1.2
   map_location_picker: ^1.2.8+3
   google_places_flutter: ^2.0.9
-  firebase_core:
-  firebase_crashlytics: 
-  cloud_firestore: 
-  firebase_auth: 
   
 dev_dependencies:
   flutter_test:
@@ -139,7 +140,10 @@ dev_dependencies:
 dependency_overrides:
   package_info_plus: ^4.1.0
   flutter_inappwebview: ^6.1.5
+  firebase_core: ^3.5.0
+  cloud_firestore: ^5.0.0
 
+  firebase_auth: ^5.1.2
   intl: ^0.18.0
   http: ^0.13.5
   #firebase_auth: ^5.3.4
