@@ -12,8 +12,8 @@ import 'package:flutter_paytabs_bridge/PaymentSdkConfigurationDetails.dart';
 import 'package:flutter_paytabs_bridge/flutter_paytabs_bridge.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutterwave_standard/flutterwave.dart';
-import 'package:flutterwave_standard/view/view_utils.dart';
+//import 'package:flutterwave_standard/flutterwave.dart';
+//import 'package:flutterwave_standard/view/view_utils.dart';
 import 'package:http/http.dart' as http;
 
 // import 'package:mercado_pago_mobile_checkout/mercado_pago_mobile_checkout.dart';
@@ -106,34 +106,62 @@ class PaymentScreenState extends State<PaymentScreen> {
     await getPaymentList().then((value) {
       appStore.setLoading(false);
       paymentList.addAll(value.data!);
-      selectedPaymentType=paymentList.first.type;
+      selectedPaymentType = paymentList.first.type;
       if (paymentList.isNotEmpty) {
         paymentList.forEach((element) {
           if (element.type == PAYMENT_TYPE_STRIPE) {
-            stripPaymentKey = element.isTest == 1 ? element.testValue!.secretKey : element.liveValue!.secretKey;
-            stripPaymentPublishKey = element.isTest == 1 ? element.testValue!.publishableKey : element.liveValue!.publishableKey;
+            stripPaymentKey = element.isTest == 1
+                ? element.testValue!.secretKey
+                : element.liveValue!.secretKey;
+            stripPaymentPublishKey = element.isTest == 1
+                ? element.testValue!.publishableKey
+                : element.liveValue!.publishableKey;
           } else if (element.type == PAYMENT_TYPE_PAYSTACK) {
-            payStackPublicKey = element.isTest == 1 ? element.testValue!.publicKey : element.liveValue!.publicKey;
+            payStackPublicKey = element.isTest == 1
+                ? element.testValue!.publicKey
+                : element.liveValue!.publicKey;
           } else if (element.type == PAYMENT_TYPE_RAZORPAY) {
-            razorKey = element.isTest == 1 ? element.testValue!.keyId.validate() : element.liveValue!.keyId.validate();
+            razorKey = element.isTest == 1
+                ? element.testValue!.keyId.validate()
+                : element.liveValue!.keyId.validate();
           } else if (element.type == PAYMENT_TYPE_PAYPAL) {
-            payPalTokenizationKey = element.isTest == 1 ? element.testValue!.tokenizationKey : element.liveValue!.tokenizationKey;
+            payPalTokenizationKey = element.isTest == 1
+                ? element.testValue!.tokenizationKey
+                : element.liveValue!.tokenizationKey;
           } else if (element.type == PAYMENT_TYPE_FLUTTERWAVE) {
-            flutterWavePublicKey = element.isTest == 1 ? element.testValue!.publicKey : element.liveValue!.publicKey;
-            flutterWaveSecretKey = element.isTest == 1 ? element.testValue!.secretKey : element.liveValue!.secretKey;
-            flutterWaveEncryptionKey = element.isTest == 1 ? element.testValue!.encryptionKey : element.liveValue!.encryptionKey;
+            flutterWavePublicKey = element.isTest == 1
+                ? element.testValue!.publicKey
+                : element.liveValue!.publicKey;
+            flutterWaveSecretKey = element.isTest == 1
+                ? element.testValue!.secretKey
+                : element.liveValue!.secretKey;
+            flutterWaveEncryptionKey = element.isTest == 1
+                ? element.testValue!.encryptionKey
+                : element.liveValue!.encryptionKey;
           } else if (element.type == PAYMENT_TYPE_PAYTABS) {
-            payTabsProfileId = element.isTest == 1 ? element.testValue!.profileId : element.liveValue!.profileId;
-            payTabsClientKey = element.isTest == 1 ? element.testValue!.clientKey : element.liveValue!.clientKey;
-            payTabsServerKey = element.isTest == 1 ? element.testValue!.serverKey : element.liveValue!.serverKey;
+            payTabsProfileId = element.isTest == 1
+                ? element.testValue!.profileId
+                : element.liveValue!.profileId;
+            payTabsClientKey = element.isTest == 1
+                ? element.testValue!.clientKey
+                : element.liveValue!.clientKey;
+            payTabsServerKey = element.isTest == 1
+                ? element.testValue!.serverKey
+                : element.liveValue!.serverKey;
           } else if (element.type == PAYMENT_TYPE_MERCADOPAGO) {
             // mercadoPagoPublicKey = element.isTest == 1 ? element.testValue!.publicKey : element.liveValue!.publicKey;
             // mercadoPagoAccessToken = element.isTest == 1 ? element.testValue!.accessToken : element.liveValue!.accessToken;
           } else if (element.type == PAYMENT_TYPE_MYFATOORAH) {
-            myFatoorahToken = element.isTest == 1 ? element.testValue!.accessToken : element.liveValue!.accessToken;
+            myFatoorahToken = element.isTest == 1
+                ? element.testValue!.accessToken
+                : element.liveValue!.accessToken;
           } else if (element.type == PAYMENT_TYPE_PAYTM) {
-            paytmMerchantId = element.isTest == 1 ? element.testValue!.merchantId : element.liveValue!.merchantId;
-            paytmMerchantKey = element.isTest == 1 ? element.testValue!.merchantKey : element.liveValue!.merchantKey;
+            paytmMerchantId = element.isTest == 1
+                ? element.testValue!.merchantId
+                : element.liveValue!.merchantId;
+            paytmMerchantKey = element.isTest == 1
+                ? element.testValue!.merchantKey
+                : element.liveValue!.merchantKey;
           }
         });
       }
@@ -177,11 +205,15 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     toast(language.transactionFailed);
-    Fluttertoast.showToast(msg: "ERROR: " + response.code.toString() + " - " + response.message!, toastLength: Toast.LENGTH_SHORT);
+    Fluttertoast.showToast(
+        msg: "ERROR: " + response.code.toString() + " - " + response.message!,
+        toastLength: Toast.LENGTH_SHORT);
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(msg: "EXTERNAL_WALLET: " + response.walletName!, toastLength: Toast.LENGTH_SHORT);
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName!,
+        toastLength: Toast.LENGTH_SHORT);
   }
 
   /// StripPayment
@@ -211,19 +243,26 @@ class PaymentScreenState extends State<PaymentScreen> {
         if (response.statusCode == 200) {
           var res = StripePayModel.fromJson(await handleResponse(response));
 
-          SetupPaymentSheetParameters setupPaymentSheetParameters = SetupPaymentSheetParameters(
+          SetupPaymentSheetParameters setupPaymentSheetParameters =
+              SetupPaymentSheetParameters(
             paymentIntentClientSecret: res.clientSecret.validate(),
             style: ThemeMode.light,
-            appearance: PaymentSheetAppearance(colors: PaymentSheetAppearanceColors(primary: primaryColor)),
+            appearance: PaymentSheetAppearance(
+                colors: PaymentSheetAppearanceColors(primary: primaryColor)),
             // applePay: PaymentSheetApplePay(merchantCountryCode: appStore.currencyName.toUpperCase()),
-            googlePay: PaymentSheetGooglePay(merchantCountryCode: appStore.currencyName.toUpperCase(), testEnv: true),
+            googlePay: PaymentSheetGooglePay(
+                merchantCountryCode: appStore.currencyName.toUpperCase(),
+                testEnv: true),
             merchantDisplayName: mAppName,
             customerId: appStore.userId.toString(),
             //customerEphemeralKeySecret: res.clientSecret.validate(),
             //setupIntentClientSecret: res.clientSecret.validate(),
           );
 
-          await Stripe.instance.initPaymentSheet(paymentSheetParameters: setupPaymentSheetParameters).then((value) async {
+          await Stripe.instance
+              .initPaymentSheet(
+                  paymentSheetParameters: setupPaymentSheetParameters)
+              .then((value) async {
             await Stripe.instance.presentPaymentSheet().then((value) async {
               toast(language.transactionSuccessful);
               paymentConfirm();
@@ -267,7 +306,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     appStore.isLoading = true;
     await saveWallet(req).then((value) {
       appStore.isLoading = false;
-      Navigator.pop(context,true);
+      Navigator.pop(context, true);
       // launchScreen(context, RiderDashBoardScreen(), isNewTask: true);
     }).catchError((error) {
       appStore.isLoading = false;
@@ -286,7 +325,8 @@ class PaymentScreenState extends State<PaymentScreen> {
     charge.reference = _getReference();
 
     try {
-      CheckoutResponse response = await plugin.checkout(context, method: method, charge: charge, fullscreen: false);
+      CheckoutResponse response = await plugin.checkout(context,
+          method: method, charge: charge, fullscreen: false);
       payStackUpdateStatus(response.reference, response.message);
       if (response.message == 'Success') {
         toast(language.transactionSuccessful);
@@ -304,7 +344,8 @@ class PaymentScreenState extends State<PaymentScreen> {
     payStackShowMessage(message, const Duration(seconds: 7));
   }
 
-  void payStackShowMessage(String message, [Duration duration = const Duration(seconds: 4)]) {
+  void payStackShowMessage(String message,
+      [Duration duration = const Duration(seconds: 4)]) {
     toast(message);
     log(message);
   }
@@ -321,7 +362,10 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   /// Paypal Payment
   void payPalPayment() async {
-    final request = BraintreePayPalRequest(amount: widget.amount.toString(), currencyCode: appStore.currencyName.toUpperCase(), displayName: sharedPref.getString(USER_NAME));
+    final request = BraintreePayPalRequest(
+        amount: widget.amount.toString(),
+        currencyCode: appStore.currencyName.toUpperCase(),
+        displayName: sharedPref.getString(USER_NAME));
     final result = await Braintree.requestPaypalNonce(
       payPalTokenizationKey!,
       request,
@@ -333,8 +377,11 @@ class PaymentScreenState extends State<PaymentScreen> {
   }
 
   /// FlutterWave Payment
-  void flutterWaveCheckout() async {
-    final customer = Customer(name: sharedPref.getString(USER_NAME).validate(), phoneNumber: sharedPref.getString(CONTACT_NUMBER).validate(), email: sharedPref.getString(USER_EMAIL).validate());
+  /* void flutterWaveCheckout() async {
+    final customer = Customer(
+        name: sharedPref.getString(USER_NAME).validate(),
+        phoneNumber: sharedPref.getString(CONTACT_NUMBER).validate(),
+        email: sharedPref.getString(USER_EMAIL).validate());
 
     final Flutterwave flutterwave = Flutterwave(
       context: context,
@@ -356,7 +403,7 @@ class PaymentScreenState extends State<PaymentScreen> {
       FlutterwaveViewUtils.showToast(context, language.transactionFailed);
     }
   }
-
+ */
   /// PayTabs Payment
   void payTabsPayment() {
     FlutterPaytabsBridge.startCardPayment(generateConfig(), (event) {
@@ -458,18 +505,23 @@ class PaymentScreenState extends State<PaymentScreen> {
           children: [
             Icon(Icons.verified, size: 50, color: Colors.green),
             SizedBox(height: 16),
-            Text(language.success, style: boldTextStyle(color: Colors.green, size: 24)),
+            Text(language.success,
+                style: boldTextStyle(color: Colors.green, size: 24)),
           ],
         ),
       ),
-      errorChild: Center(child: Text(language.failed, style: boldTextStyle(color: Colors.red, size: 24))),
+      errorChild: Center(
+          child: Text(language.failed,
+              style: boldTextStyle(color: Colors.red, size: 24))),
       request: isTestType
           ? MyfatoorahRequest.test(
               currencyIso: Country.SaudiArabia,
               successUrl: 'https://pub.dev/packages/get',
               errorUrl: 'https://www.google.com/',
               invoiceAmount: widget.amount!.toDouble(),
-              language: defaultLanguage == 'ar' ? ApiLanguage.Arabic : ApiLanguage.English,
+              language: defaultLanguage == 'ar'
+                  ? ApiLanguage.Arabic
+                  : ApiLanguage.English,
               token: myFatoorahToken!,
             )
           : MyfatoorahRequest.live(
@@ -477,7 +529,9 @@ class PaymentScreenState extends State<PaymentScreen> {
               successUrl: 'https://pub.dev/packages/get',
               errorUrl: 'https://www.google.com/',
               invoiceAmount: widget.amount!.toDouble(),
-              language: defaultLanguage == 'ar' ? ApiLanguage.Arabic : ApiLanguage.English,
+              language: defaultLanguage == 'ar'
+                  ? ApiLanguage.Arabic
+                  : ApiLanguage.English,
               token: myFatoorahToken!,
             ),
     );
@@ -497,7 +551,11 @@ class PaymentScreenState extends State<PaymentScreen> {
 
     String orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
-    String callBackUrl = (isTestType ? 'https://securegw-stage.paytm.in' : 'https://securegw.paytm.in') + '/theia/paytmCallback?ORDER_ID=' + orderId;
+    String callBackUrl = (isTestType
+            ? 'https://securegw-stage.paytm.in'
+            : 'https://securegw.paytm.in') +
+        '/theia/paytmCallback?ORDER_ID=' +
+        orderId;
 
     var url = 'https://desolate-anchorage-29312.herokuapp.com/generateTxnToken';
 
@@ -562,7 +620,8 @@ class PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(language.payment, style: boldTextStyle(color: appTextPrimaryColorWhite)),
+        title: Text(language.payment,
+            style: boldTextStyle(color: appTextPrimaryColorWhite)),
       ),
       body: Stack(
         children: [
@@ -584,14 +643,18 @@ class PaymentScreenState extends State<PaymentScreen> {
                     decoration: BoxDecoration(
                       //backgroundColor: Colors.white,
                       borderRadius: BorderRadius.circular(defaultRadius),
-                      border: Border.all(color: selectedPaymentType == e.type ? primaryColor : dividerColor.withOpacity(0.5)),
+                      border: Border.all(
+                          color: selectedPaymentType == e.type
+                              ? primaryColor
+                              : dividerColor.withOpacity(0.5)),
                     ),
                     child: Row(
                       children: [
                         Image.network(e.gatewayLogo!, width: 40, height: 40),
                         SizedBox(width: 12),
                         Expanded(
-                          child: Text(e.title.validate(), style: primaryTextStyle(), maxLines: 2),
+                          child: Text(e.title.validate(),
+                              style: primaryTextStyle(), maxLines: 2),
                         ),
                       ],
                     ),
@@ -606,7 +669,9 @@ class PaymentScreenState extends State<PaymentScreen> {
               child: loaderWidget(),
             );
           }),
-          !appStore.isLoading && paymentList.isEmpty ? emptyWidget() : SizedBox(),
+          !appStore.isLoading && paymentList.isEmpty
+              ? emptyWidget()
+              : SizedBox(),
         ],
       ),
       bottomNavigationBar: Padding(
@@ -625,7 +690,7 @@ class PaymentScreenState extends State<PaymentScreen> {
               } else if (selectedPaymentType == PAYMENT_TYPE_PAYPAL) {
                 payPalPayment();
               } else if (selectedPaymentType == PAYMENT_TYPE_FLUTTERWAVE) {
-                flutterWaveCheckout();
+                //flutterWaveCheckout();
               } else if (selectedPaymentType == PAYMENT_TYPE_PAYTABS) {
                 payTabsPayment();
               } else if (selectedPaymentType == PAYMENT_TYPE_MERCADOPAGO) {

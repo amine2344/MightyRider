@@ -142,7 +142,7 @@ dependency_overrides:
   flutter_inappwebview: ^6.1.5
   firebase_core: ^3.5.0
   cloud_firestore: ^5.0.0
-  flutterwave_standard: ^1.0.8
+  #flutterwave_standard: ^1.0.8
   firebase_auth: ^5.1.2
   intl: ^0.18.0
   http: ^0.13.5

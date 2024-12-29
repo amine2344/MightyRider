@@ -27,11 +27,13 @@ generateInvoiceCall(RiderModel? riderModel, {Payment? payment}) async {
     ),
     InvoiceItem(
       description: language.duration,
-      price: riderModel.perMinuteDriveCharge!.toStringAsFixed(digitAfterDecimal),
+      price:
+          riderModel.perMinuteDriveCharge!.toStringAsFixed(digitAfterDecimal),
     ),
     InvoiceItem(
       description: language.waitTime,
-      price: riderModel.perMinuteWaitingCharge!.toStringAsFixed(digitAfterDecimal),
+      price:
+          riderModel.perMinuteWaitingCharge!.toStringAsFixed(digitAfterDecimal),
     ),
     InvoiceItem(
       description: language.tip,
@@ -45,7 +47,8 @@ generateInvoiceCall(RiderModel? riderModel, {Payment? payment}) async {
     if (riderModel.couponDiscount != 0)
       InvoiceItem(
         description: language.couponDiscount,
-        price: '${riderModel.couponDiscount!.toStringAsFixed(digitAfterDecimal)}',
+        price:
+            '${riderModel.couponDiscount!.toStringAsFixed(digitAfterDecimal)}',
         isDiscount: false,
       ),
   ];
@@ -61,15 +64,23 @@ generateInvoiceCall(RiderModel? riderModel, {Payment? payment}) async {
     });
 
   final invoice = Invoice(
-    supplier: Supplier(name: PDF_NAME, address: PDF_ADDRESS, contactNumber: PDF_CONTACT_NUMBER),
-    customer: Customer(name: '${riderModel.riderName!}', sourceAddress: '${riderModel.startAddress.validate()}', destinationAddress: '${riderModel.endAddress.validate()}'),
+    supplier: Supplier(
+        name: PDF_NAME,
+        address: PDF_ADDRESS,
+        contactNumber: PDF_CONTACT_NUMBER),
+    customer: Customer(
+        name: '${riderModel.riderName!}',
+        sourceAddress: '${riderModel.startAddress.validate()}',
+        destinationAddress: '${riderModel.endAddress.validate()}'),
     info: InvoiceInfo(
       number: '${riderModel.id}',
       invoiceDate: DateTime.now(),
       orderedDate: DateTime.parse(riderModel.createdAt!).toLocal(),
     ),
     items: list,
-    totalAmount: payment.driverTips != 0 ? riderModel.subtotal! + payment.driverTips!.toDouble() : riderModel.subtotal!.toDouble(),
+    totalAmount: payment.driverTips != 0
+        ? riderModel.subtotal! + payment.driverTips!.toDouble()
+        : riderModel.subtotal!.toDouble(),
     paymentType: riderModel.paymentType.validate(),
     paymentStatus: riderModel.paymentStatus.validate(),
   );
@@ -134,40 +145,49 @@ class PdfInvoiceApi {
       footer: (context) => buildFooter(invoice),
     ));
 
-    return PdfApi.saveDocument(name: 'Invoice_${invoice.info.number}.pdf', pdf: pdf);
+    return PdfApi.saveDocument(
+        name: 'Invoice_${invoice.info.number}.pdf', pdf: pdf);
   }
 
   static Widget buildHeader(Invoice invoice) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(language.customerName, style: TextStyle(color: PdfColors.blue)),
-            SizedBox(height: 4),
-            Text('${invoice.customer.name}'),
-            SizedBox(height: 16),
-            Text(language.sourceLocation, style: TextStyle(color: PdfColors.blue)),
-            SizedBox(height: 4),
-            Text('${invoice.customer.sourceAddress}'),
-            SizedBox(height: 4),
-            Text(language.destinationLocation, style: TextStyle(color: PdfColors.blue)),
-            SizedBox(height: 4),
-            Text('${invoice.customer.destinationAddress}'),
-            SizedBox(height: 16),
-            Text('${language.paymentType}: ${invoice.paymentType}'),
-            SizedBox(height: 4),
-            Text('${language.paymentStatus}: ${invoice.paymentStatus}'),
-          ],
-        ),
-      ),
-      Spacer(),
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('${language.invoiceNo} ${invoice.info.number}'),
-        Text('${language.invoiceDate} ${Utils.formatDate(invoice.info.invoiceDate)}'),
-        Text('${language.orderedDate} ${Utils.formatDate(invoice.info.orderedDate)}'),
-      ]),
-    ]);
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(language.customerName,
+                    style: TextStyle(color: PdfColors.blue)),
+                SizedBox(height: 4),
+                Text('${invoice.customer.name}'),
+                SizedBox(height: 16),
+                Text(language.sourceLocation,
+                    style: TextStyle(color: PdfColors.blue)),
+                SizedBox(height: 4),
+                Text('${invoice.customer.sourceAddress}'),
+                SizedBox(height: 4),
+                Text(language.destinationLocation,
+                    style: TextStyle(color: PdfColors.blue)),
+                SizedBox(height: 4),
+                Text('${invoice.customer.destinationAddress}'),
+                SizedBox(height: 16),
+                Text('${language.paymentType}: ${invoice.paymentType}'),
+                SizedBox(height: 4),
+                Text('${language.paymentStatus}: ${invoice.paymentStatus}'),
+              ],
+            ),
+          ),
+          Spacer(),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('${language.invoiceNo} ${invoice.info.number}'),
+            Text(
+                '${language.invoiceDate} ${Utils.formatDate(invoice.info.invoiceDate)}'),
+            Text(
+                '${language.orderedDate} ${Utils.formatDate(invoice.info.orderedDate)}'),
+          ]),
+        ]);
   }
 
   static Widget buildTitle(Invoice invoice) {
@@ -177,15 +197,20 @@ class PdfInvoiceApi {
         children: [
           Text(
             language.invoiceCapital,
-            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: PdfColors.blue),
+            style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: PdfColors.blue),
           ),
-          pw.Text('${invoice.supplier.name}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          pw.Text('${invoice.supplier.name}',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ],
       ),
       SizedBox(height: 4),
       pw.Text('${invoice.supplier.address}', style: TextStyle(fontSize: 16)),
       SizedBox(height: 4),
-      pw.Text('${invoice.supplier.contactNumber}', style: TextStyle(fontSize: 16)),
+      pw.Text('${invoice.supplier.contactNumber}',
+          style: TextStyle(fontSize: 16)),
     ]);
   }
 
@@ -234,7 +259,8 @@ class PdfInvoiceApi {
         children: [
           Divider(),
           SizedBox(height: 2 * PdfPageFormat.mm),
-          buildSimpleText(title: language.address, value: invoice.supplier.address),
+          buildSimpleText(
+              title: language.address, value: invoice.supplier.address),
         ],
       );
 
