@@ -73,8 +73,7 @@ String sourceLocationTitle = '';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPref = await SharedPreferences.getInstance();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform, name: "Rider");
+  await Firebase.initializeApp(name:"rider", options: DefaultFirebaseOptions.currentPlatform);
   await initialize(aLocaleLanguageList: languageList());
   appStore.setLanguage(defaultLanguage);
   FlutterError.onError = (errorDetails) {

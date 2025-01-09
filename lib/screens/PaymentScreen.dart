@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
+//import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_paytabs_bridge/BaseBillingShippingInfo.dart' as payTab;
@@ -18,7 +18,7 @@ import 'package:http/http.dart' as http;
 
 // import 'package:mercado_pago_mobile_checkout/mercado_pago_mobile_checkout.dart';
 import 'package:my_fatoorah/my_fatoorah.dart';
-import 'package:paytm/paytm.dart';
+//import 'package:paytm/paytm.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../screens/DashBoardScreen.dart';
 import '../utils/Extensions/StringExtensions.dart';
@@ -362,7 +362,7 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   /// Paypal Payment
   void payPalPayment() async {
-    final request = BraintreePayPalRequest(
+    /*  final request = BraintreePayPalRequest(
         amount: widget.amount.toString(),
         currencyCode: appStore.currencyName.toUpperCase(),
         displayName: sharedPref.getString(USER_NAME));
@@ -373,7 +373,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     if (result != null) {
       toast(language.transactionSuccessful);
       paymentConfirm();
-    }
+    } */
   }
 
   /// FlutterWave Payment
@@ -578,7 +578,7 @@ class PaymentScreenState extends State<PaymentScreen> {
       );
 
       String txnToken = response.body;
-
+/* 
       var paytmResponse = Paytm.payWithPaytm(
         mId: paytmMerchantId!,
         orderId: orderId,
@@ -587,9 +587,9 @@ class PaymentScreenState extends State<PaymentScreen> {
         callBackUrl: callBackUrl,
         staging: isTestType,
         appInvokeEnabled: false,
-      );
+      ); */
 
-      paytmResponse.then((value) {
+      /* paytmResponse.then((value) {
         setState(() {
           loading = false;
           if (value['error']) {
@@ -605,7 +605,7 @@ class PaymentScreenState extends State<PaymentScreen> {
             }
           }
         });
-      });
+      }); */
     } catch (e) {
       log(e);
     }

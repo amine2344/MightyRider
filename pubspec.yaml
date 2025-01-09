@@ -97,12 +97,12 @@ dependencies:
       url: https://github.com/appmeetmighty/flutter_paystack.git
 #    path: ./lib/package/flutter_paystack-master
 #  flutter_paystack: ^1.0.7
-  flutter_braintree: ^4.0.0
+  #flutter_braintree: ^4.0.0
   
   flutter_paytabs_bridge: ^2.6.17
 #  mercado_pago_mobile_checkout: ^0.2.0-dev.3
-  my_fatoorah: ^3.3.0
-  paytm: ^3.0.1
+  my_fatoorah: ^3.5.0
+  #paytm: ^3.0.1
 
 
   # PUSH NOTIFICATION
