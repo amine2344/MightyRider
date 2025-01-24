@@ -71,7 +71,7 @@ class SignInScreenState extends State<SignInScreen> {
     hideKeyboard(context);
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      if (isAcceptTermsNPrivacy) {
+      if (/* isAcceptTermsNPrivacy */ 1 == 1) {
         appStore.setLoading(true);
 
         Map req = {
@@ -270,7 +270,7 @@ class SignInScreenState extends State<SignInScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  /*  SizedBox(height: 16),
                   Row(
                     children: [
                       SizedBox(
@@ -349,6 +349,7 @@ class SignInScreenState extends State<SignInScreen> {
                       )
                     ],
                   ),
+                 */
                   SizedBox(height: 32),
                   AppButtonWidget(
                     width: MediaQuery.of(context).size.width,

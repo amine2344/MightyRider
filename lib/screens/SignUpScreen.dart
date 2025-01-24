@@ -76,7 +76,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       hideKeyboard(context);
-      if (isAcceptedTc) {
+      if (/* isAcceptedTc */1 == 1 ) {
         appStore.setLoading(true);
         Map req = {
           'first_name': firstController.text.trim(),
@@ -283,7 +283,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                           ),
                       ],
                     ),
-                  SizedBox(height: 16),
+                 /*  SizedBox(height: 16),
                   Row(
                     children: [
                       SizedBox(
@@ -336,7 +336,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       )
                     ],
                   ),
-                  SizedBox(height: 32),
+                 */  SizedBox(height: 32),
                   AppButtonWidget(
                     width: MediaQuery.of(context).size.width,
                     text: language.signUp,
