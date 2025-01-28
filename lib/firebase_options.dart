@@ -50,21 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCcM7fuLUoNAQkpeSDUkJn1U-4yorxmyt0',
-    appId: '1:1074134422433:android:fa76b53038eba4bb9ef1e0',
-    messagingSenderId: '1074134422433',
-    projectId: 'delivery-20857',
-    storageBucket: 'delivery-20857.appspot.com',
+    apiKey: 'AIzaSyDkPSHAs0sPPx-2iAl_APzquIQXF0X9Geo',
+    appId: '1:1046501087671:android:873511e2606cec1ab83032',
+    messagingSenderId: '1046501087671',
+    projectId: 'auth-72203',
+    storageBucket: 'auth-72203.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBerDT9HGBXu88DaG3s0E3LtVGwAsjC0JU',
-    appId: '1:1074134422433:ios:3a9c8b99ff7f04159ef1e0',
-    messagingSenderId: '1074134422433',
-    projectId: 'delivery-20857',
-    storageBucket: 'delivery-20857.appspot.com',
-    androidClientId: '1074134422433-0ghki6lc5ehg5etc9vbvp3pcjoimo7at.apps.googleusercontent.com',
-    iosClientId: '1074134422433-mmrtbkcnpvhi21ldpv2dmjbjma1ub8uv.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAw77vzKOpBg8Z285RxIc67Y2gByDfs_wg',
+    appId: '1:1046501087671:ios:5146921f4560a885b83032',
+    messagingSenderId: '1046501087671',
+    projectId: 'auth-72203',
+    storageBucket: 'auth-72203.appspot.com',
+    androidClientId: '1046501087671-hk8los2mqmjq54qtjgoj46q19c0on7kn.apps.googleusercontent.com',
+    iosClientId: '1046501087671-gnb55fnv122jrod4p1uso0j107houacn.apps.googleusercontent.com',
     iosBundleId: 'com.mightytaxirider.app',
   );
 

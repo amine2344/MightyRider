@@ -70,7 +70,7 @@ Future<void> initialize({
 LatLng? sourceLocation;
 late BitmapDescriptor riderIcon;
 String sourceLocationTitle = '';
-void main() async {
+/* void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPref = await SharedPreferences.getInstance();
   await Firebase.initializeApp(name:"rider", options: DefaultFirebaseOptions.currentPlatform);
@@ -98,6 +98,61 @@ void main() async {
       isInitialization: true);
   await appStore.setUserProfile(sharedPref.getString(USER_PROFILE_PHOTO) ?? '');
   oneSignalSettings();
+  runApp(MyApp());
+}
+ */
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  sharedPref = await SharedPreferences.getInstance();
+
+  try {
+    // Attempt Firebase initialization
+    await Firebase.initializeApp(
+      /* name: "rider", */
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    log('Firebase initialized successfully');
+  } catch (e, stackTrace) {
+    log('Firebase initialization failed: $e');
+    log('$stackTrace');
+  }
+
+  await initialize(aLocaleLanguageList: languageList());
+  appStore.setLanguage(defaultLanguage);
+
+  FlutterError.onError = (errorDetails) {
+    try {
+      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    } catch (e) {
+      log('Failed to log error to FirebaseCrashlytics: $e');
+    }
+  };
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Handle async exceptions
+  PlatformDispatcher.instance.onError = (error, stack) {
+    try {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    } catch (e) {
+      log('Failed to log error to FirebaseCrashlytics: $e');
+    }
+    return true;
+  };
+
+  // Initialize app state
+  await appStore.setLoggedIn(sharedPref.getBool(IS_LOGGED_IN) ?? false,
+      isInitializing: true);
+  await appStore.setUserEmail(sharedPref.getString(USER_EMAIL) ?? '',
+      isInitialization: true);
+  await appStore.setUserProfile(sharedPref.getString(USER_PROFILE_PHOTO) ?? '');
+
+  oneSignalSettings();
+
   runApp(MyApp());
 }
 
