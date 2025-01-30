@@ -63,31 +63,32 @@ class SettingScreenState extends State<SettingScreen> {
             }),
             if (appStore.privacyPolicy != null)
               settingItemWidget(Ionicons.ios_document_outline, language.privacyPolicy, () {
-                launchScreen(context, TermsConditionScreen(title: language.privacyPolicy, subtitle: appStore.privacyPolicy), pageRouteAnimation: PageRouteAnimation.Slide);
+                //launchScreen(context, TermsConditionScreen(title: language.privacyPolicy, subtitle: appStore.privacyPolicy), pageRouteAnimation: PageRouteAnimation.Slide);
+                launchUrl("https://sites.google.com/view/mighty-taxi/accueil");
               }),
             if (appStore.mHelpAndSupport != null)
               settingItemWidget(Ionicons.help_outline, language.helpSupport, () {
                 if (appStore.mHelpAndSupport != null) {
-                  launchUrl(Uri.parse(appStore.mHelpAndSupport!));
+                  launchUrl("https://sites.google.com/view/mighty-taxi/accueil");
                 } else {
                   toast(language.txtURLEmpty);
                 }
               }),
-            if (appStore.termsCondition != null)
+            /*if (appStore.termsCondition != null)
               settingItemWidget(Ionicons.document_outline, language.termsConditions, () {
                 if (appStore.termsCondition != null) {
                   launchScreen(context, TermsConditionScreen(title: language.termsConditions, subtitle: appStore.termsCondition), pageRouteAnimation: PageRouteAnimation.Slide);
                 } else {
                   toast(language.txtURLEmpty);
                 }
-              }),
-            settingItemWidget(
+              }),*/
+           /* settingItemWidget(
               Ionicons.information,
               language.aboutUs,
               () {
                 launchScreen(context, AboutScreen(settingModel: appStore.settingModel), pageRouteAnimation: PageRouteAnimation.Slide);
               },
-            ),
+            ),*/
             settingItemWidget(Ionicons.ios_trash_outline,color:Colors.red, language.deleteAccount, () {
               launchScreen(context, DeleteAccountScreen(), pageRouteAnimation: PageRouteAnimation.Slide);
             }, isLast: true),
