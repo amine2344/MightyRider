@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1046501087671-gnb55fnv122jrod4p1uso0j107houacn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1046501087671-gnb55fnv122jrod4p1uso0j107houacn</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1046501087671-hk8los2mqmjq54qtjgoj46q19c0on7kn.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAw77vzKOpBg8Z285RxIc67Y2gByDfs_wg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1046501087671</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mightytaxirider.app</string>
+	<key>PROJECT_ID</key>
+	<string>auth-72203</string>
+	<key>STORAGE_BUCKET</key>
+	<string>auth-72203.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1046501087671:ios:5146921f4560a885b83032</string>
+</dict>
+</plist>
