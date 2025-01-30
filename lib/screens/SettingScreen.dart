@@ -61,19 +61,19 @@ class SettingScreenState extends State<SettingScreen> {
             settingItemWidget(Ionicons.language_outline, language.language, () {
               launchScreen(context, LanguageScreen(), pageRouteAnimation: PageRouteAnimation.Slide);
             }),
-            if (appStore.privacyPolicy != null)
+            if (Uri.tryparse("https://sites.google.com/view/mighty-taxi/accueil"))
               settingItemWidget(Ionicons.ios_document_outline, language.privacyPolicy, () {
                 //launchScreen(context, TermsConditionScreen(title: language.privacyPolicy, subtitle: appStore.privacyPolicy), pageRouteAnimation: PageRouteAnimation.Slide);
-                launchUrl("https://sites.google.com/view/mighty-taxi/accueil");
+                launchUrl(Uri.parse("https://sites.google.com/view/mighty-taxi/accueil"));
               }),
-            if (appStore.mHelpAndSupport != null)
+           /* if (appStore.mHelpAndSupport != null)
               settingItemWidget(Ionicons.help_outline, language.helpSupport, () {
                 if (appStore.mHelpAndSupport != null) {
-                  launchUrl("https://sites.google.com/view/mighty-taxi/accueil");
+                  launchUrl(Uri("https://sites.google.com/view/mighty-taxi/accueil"));
                 } else {
                   toast(language.txtURLEmpty);
                 }
-              }),
+              }),*/
             /*if (appStore.termsCondition != null)
               settingItemWidget(Ionicons.document_outline, language.termsConditions, () {
                 if (appStore.termsCondition != null) {
