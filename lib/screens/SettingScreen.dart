@@ -61,10 +61,10 @@ class SettingScreenState extends State<SettingScreen> {
             settingItemWidget(Ionicons.language_outline, language.language, () {
               launchScreen(context, LanguageScreen(), pageRouteAnimation: PageRouteAnimation.Slide);
             }),
-            //if (Uri.tryparse("https://sites.google.com/view/mighty-taxi/accueil"))
+            //if (Uri.tryParse("https://sites.google.com/view/mighty-taxi/accueil"))
               settingItemWidget(Ionicons.ios_document_outline, language.privacyPolicy, () {
                 //launchScreen(context, TermsConditionScreen(title: language.privacyPolicy, subtitle: appStore.privacyPolicy), pageRouteAnimation: PageRouteAnimation.Slide);
-                launchUrl(Uri("https://sites.google.com/view/mighty-taxi/accueil"));
+                launchUrl(Uri.parse("https://sites.google.com/view/mighty-taxi/accueil"));
               }),
            /* if (appStore.mHelpAndSupport != null)
               settingItemWidget(Ionicons.help_outline, language.helpSupport, () {
