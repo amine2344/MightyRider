@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Mighty Rider</string>
+	<string>Mighty Rd</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Mighty Rider</string>
+	<string>Mighty Rd</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -49,21 +49,22 @@
 		<string>mqtt.tcp</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Mighty Rider app requires access to the Camera to upload your profile photo.</string>
+	<string>Mighty Rd app requires access to the Camera to upload your profile photo.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Looking for local tcp Bonjour service</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Mighty Rider  App uses your location to pick origins, destinations, and predict ride times</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Mighty Rider requires address permission access to get the current location of the user.</string>
+	<string>Mighty Rd  App uses your location to pick origins, destinations, and predict ride times</string>
+	
+
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Mighty Rider  requires address permission access to get the current location of the user.</string>
+	<string>Mighty Rd requires access to your location to select your destination and locate drivers arround you</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Mighty Rider  app requires access to microphone when you will be used to record your speech at time of  press the &quot;Mic&quot; button.</string>
+	<string>Mighty Rd  app requires access to microphone when you will be used to record your speech at time of  press the &quot;Mic&quot; button.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Mighty Rider requires access to the photo library to upload your profile photo.</string>
+	<string>Mighty Rd requires access to the photo library to upload your profile photo.</string>
+
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Mighty Rider requires access to the photo library to upload your profile photo.</string>
+	<string>Mighty Rd requires access to the photo library to upload your profile photo.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
